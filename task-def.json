@@ -1,0 +1,50 @@
+{
+    "family": "demoname",
+    "networkMode": "awsvpc",
+    "executionRoleArn": "arn:aws:iam::275662791714:role/ecsTaskExecutionRole",
+    "taskRoleArn": "arn:aws:iam::275662791714:role/ISTElasticContainerServiceTaskRole",
+    "cpu": "512",
+    "memory": "1024",
+    "requiresCompatibilities": ["FARGATE"],
+    "containerDefinitions": [
+      {
+        "name": "front",
+        "image": "275662791714.dkr.ecr.us-east-1.amazonaws.com/ist-demo/demoname/frontend:latest",
+        "portMappings": [
+          {
+            "containerPort": 3000,
+            "hostPort": 3000,
+            "protocol": "tcp"
+          }
+        ],
+        "logConfiguration": {
+          "logDriver": "awslogs",
+          "options": {
+            "awslogs-group": "/ecs/scale",
+            "awslogs-region": "us-east-1",
+            "awslogs-stream-prefix": "demoname"
+          }
+        }
+      },
+      {
+        "name": "back",
+        "image": "275662791714.dkr.ecr.us-east-1.amazonaws.com/ist-demo/demoname/backend:latest",
+        "portMappings": [
+          {
+            "containerPort": 8000,
+            "hostPort": 8000,
+            "protocol": "tcp"
+          }
+        ],
+        "logConfiguration": {
+          "logDriver": "awslogs",
+          "options": {
+            "awslogs-group": "/ecs/scale",
+            "awslogs-region": "us-east-1",
+            "awslogs-stream-prefix": "demoname"
+          }
+        }
+      }
+    ]
+  }
+  
