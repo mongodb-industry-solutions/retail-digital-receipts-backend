@@ -1,71 +1,41 @@
-import os
-from pymongo import MongoClient
-from dotenv import load_dotenv
+from app.domain.repositories.invoice_repository import InvoiceRepository
+from app.domain.models.invoice import Invoice
+from app.infrastructure.db.mongo_client import get_db
 
-# Load environment variables from .env file
-load_dotenv()
+class MongoInvoiceRepository(InvoiceRepository):
+    def __init__(self):
+        """
+        Initialize the repository with the MongoDB client and the invoices collection.
+        The `get_db()` function ensures that the MongoDB client is a singleton.
+        """
+        self.db = get_db()  # Get the MongoDB database instance (Singleton)
+        self.collection = self.db["invoices"]  # Mongo collection to store invoices
 
-class MongoDBConnector:
-    """ A class to provide access to a MongoDB database.
-    This class handles the connection to the database and provides methods to interact with collections and documents.
+    async def save(self, invoice: Invoice) -> str:
+        """
+        Save the generated invoice to the MongoDB database.
 
-    Attributes:
-        uri (str): The connection string URI for the MongoDB database.
-        database_name (str): The name of the database to connect to.
-        appname (str): The name of the application connecting to the database.
-    """
+        Args:
+            invoice (Invoice): The invoice to be saved.
 
-    def __init__(self, uri=None, database_name=None, appname=None):
-        """ Initialize the MongoDBConnector instance. """
-        self.uri = uri or os.getenv("MONGODB_URI")
-        self.database_name = database_name or os.getenv("DATABASE_NAME")
-        self.appname = appname or os.getenv("APP_NAME")
-        self.client = MongoClient(self.uri, appname=self.appname)
-        self.db = self.client[self.database_name]
+        Returns:
+            str: The inserted invoice ID.
+        """
+        invoice_dict = invoice.to_dict()  # Convert the invoice entity to a dictionary
+        result = await self.collection.insert_one(invoice_dict)  # Insert the invoice into MongoDB
+        return str(result.inserted_id)  # Return the inserted ID
 
-    def get_collection(self, collection_name):
-        """Retrieve a collection."""
-        if not collection_name:
-            raise ValueError("Collection name must be provided.")
-        return self.db[collection_name]
+    async def find_by_order_id(self, order_id: str) -> Invoice:
+        """
+        Retrieve an invoice by its associated order ID.
 
-    def insert_one(self, collection_name, document):
-        """Insert a single document into a collection."""
-        collection = self.get_collection(collection_name)
-        result = collection.insert_one(document)
-        return result.inserted_id
-
-    def insert_many(self, collection_name, documents):
-        """Insert multiple documents into a collection."""
-        collection = self.get_collection(collection_name)
-        result = collection.insert_many(documents)
-        return result.inserted_ids
-
-    def find(self, collection_name, query={}, projection=None):
-        """Retrieve documents from a collection."""
-        collection = self.get_collection(collection_name)
-        return list(collection.find(query, projection))
-
-    def update_one(self, collection_name, query, update, upsert=False):
-        """Update a single document in a collection."""
-        collection = self.get_collection(collection_name)
-        result = collection.update_one(query, update, upsert=upsert)
-        return result.modified_count
-
-    def update_many(self, collection_name, query, update, upsert=False):
-        """Update multiple documents in a collection."""
-        collection = self.get_collection(collection_name)
-        result = collection.update_many(query, update, upsert=upsert)
-        return result.modified_count
-
-    def delete_one(self, collection_name, query):
-        """Delete a single document from a collection."""
-        collection = self.get_collection(collection_name)
-        result = collection.delete_one(query)
-        return result.deleted_count
-
-    def delete_many(self, collection_name, query):
-        """Delete multiple documents from a collection."""
-        collection = self.get_collection(collection_name)
-        result = collection.delete_many(query)
-        return result.deleted_count
+        Args:
+            order_id (str): The order ID associated with the invoice.
+        
+        Returns:
+            Invoice: The invoice corresponding to the provided order ID.
+        """
+        invoice_doc = await self.collection.find_one({"orderId": order_id})  # Query MongoDB for the invoice
+        if invoice_doc:
+            return Invoice.from_order(invoice_doc)  # Convert the Mongo document to an Invoice entity
+        return None  # Return None if no invoice is found
