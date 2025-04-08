@@ -1,9 +1,8 @@
 import asyncio
 import logging
-from app.infrastructure.queue.async_queue import EventQueue  # Import the event queue to process events
-from app.application.use_cases.create_invoice import CreateInvoice  # Import the use case to create an invoice
+from app.infrastructure.queue.async_queue import EventQueue
+from app.application.use_cases.create_invoice import CreateInvoice 
 
-# Configure logging for tracking events and errors
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 

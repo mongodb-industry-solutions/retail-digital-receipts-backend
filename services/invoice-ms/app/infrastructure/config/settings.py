@@ -1,36 +1,40 @@
-# Configure logging
+import logging
+from pydantic_settings import BaseSettings
+from pydantic import ValidationError
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-# Reminder: Make sure to define the `ENVIRONMENT` environment variable in Docker or your environment.
-# The `ENVIRONMENT` variable can have values like "local" or "production".
-# In Docker, this variable is defined in the `docker-compose.yml` file as follows:
-# environment:
-#   - ENVIRONMENT=production  # Or 'local', depending on the environment
-# If this variable is not defined, the system will default to using `.env.production`.
-
-# Dynamically select .env file based on the 'ENVIRONMENT' variable
-env_file = ".env.local" if os.getenv("ENVIRONMENT") == "local" else ".env.production"
 
 class Settings(BaseSettings):
     mongodb_uri: str
     database_name: str
+    
+    # Add fields for the extra env vars you have in .env:
+    azure_storage_connection_string: str
+    # If 'origins' is just a single string, do this:
+    origins: str
+    # Or if you intend it to be a list:
+    # origins: list[str] = []
 
-    class Config:
-        env_file = env_file  # Load the appropriate .env file
+    # Pydantic v2 approach to config:
+    model_config = {
+        "env_file": ".env",
+        # "extra": "allow",  # use this if you want to IGNORE unexpected env vars
+        "extra": "forbid",   # or keep forbid if you want an error on unexpected env vars
+    }
 
-# Attempt to load the configurations and validate the variables
 try:
     settings = Settings()
-
-    # Verify that the variables are loaded correctly
-    logger.info("Running with MongoDB URI: %s", settings.mongodb_uri)
+    # Log or use them:
+    logger.info("MongoDB URI: %s", settings.mongodb_uri)
     logger.info("Database Name: %s", settings.database_name)
+    logger.info("Azure Storage Connection: %s", settings.azure_storage_connection_string)
+    logger.info("Origins: %s", settings.origins)
 
 except ValidationError as e:
     logger.error(f"Validation error: {e}")
-    raise  # Re-raise the error if the necessary configurations cannot be validated
+    raise
 
 except Exception as e:
     logger.error(f"Error loading environment variables: {e}")
-    raise  # Re-raise the error if there is any other failure
+    raise
