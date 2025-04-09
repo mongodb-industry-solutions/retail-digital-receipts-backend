@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 from app.infrastructure.queue.async_queue import EventQueue
 from app.infrastructure.events.change_listener import MongoChangeStream
 from app.application.workers.event_processor import EventProcessor
+from app.infrastructure.db.mongo_invoice_repository import MongoInvoiceRepository
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -42,8 +44,11 @@ event_queue = EventQueue()
 # which watches the 'orders' collection for 'insert' events.
 change_stream = MongoChangeStream(event_queue)
 
+# Instantiate the concrete repository for invoices
+invoice_repository = MongoInvoiceRepository()
+
 # Instantiate the Worker (consumer) that processes events from the queue.
-worker = EventProcessor(event_queue)
+worker = EventProcessor(event_queue, invoice_repository)
 
 @app.on_event("startup")
 async def on_startup():
@@ -58,7 +63,7 @@ async def on_startup():
     # Task #1: Listen for MongoDB inserts
     asyncio.create_task(change_stream.listen_for_changes())
     # Task #2: Continuously process events from the queue
-    asyncio.create_task(worker.run())
+    asyncio.create_task(worker.process_events())
     logger.info("Background tasks started successfully.")
 
 # Include the router if you have additional endpoints
