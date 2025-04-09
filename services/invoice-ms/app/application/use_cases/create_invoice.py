@@ -1,53 +1,56 @@
 from app.domain.models.invoice import Invoice
 from app.domain.repositories.invoice_repository import InvoiceRepository
+from app.domain.services.external_metadata_service import ExternalMetadataService
 import logging
 
-# Configure logging for tracking events and errors
 logger = logging.getLogger(__name__)
 
 class CreateInvoice:
     """
     The CreateInvoice class handles the business logic for creating an invoice from order data.
-    
-    It is a part of the use case layer, which orchestrates business processes. In this case, the process
-    includes converting an order event into an invoice, performing necessary validations, and saving the 
-    invoice into the database.
-
-    This class delegates the task of saving the invoice to a repository (InvoiceRepository), which ensures 
-    persistence. This separation allows for better testability and adheres to Clean Architecture principles.
+    It now also calls an external metadata service to enrich the invoice before saving.
     """
 
-    def __init__(self, invoice_repository: InvoiceRepository):
+    def __init__(self, 
+                 invoice_repository: InvoiceRepository, 
+                 external_metadata_service: ExternalMetadataService):
         """
         Initialize the CreateInvoice use case.
 
         Args:
-            invoice_repository (InvoiceRepository): The repository responsible for saving the invoice to the database.
+            invoice_repository (InvoiceRepository): The repository for saving invoices.
+            external_metadata_service (ExternalMetadataService): The service responsible for fetching external metadata.
         """
         self.invoice_repository = invoice_repository
+        self.external_metadata_service = external_metadata_service
 
-    async def execute(self, order_data: dict):
+    async def execute(self, order_data: dict) -> str:
         """
-        Creates an invoice based on the order data and persists it to the database.
+        Creates and saves an invoice from the order data after enriching it with external metadata.
 
         Args:
-            order_data (dict): The order data coming from the event (Change Stream).
+            order_data (dict): The data from which to create the invoice.
         
         Returns:
             str: The ID of the created invoice.
         """
         try:
-            # Step 1: Create an Invoice entity using the order data
+            # Step 1: Create an Invoice entity
             invoice = Invoice.from_order(order_data)
-
-            # Step 2: Save the created invoice using the repository
+            
+            # Step 2: Enrich the invoice using the external metadata service
+            metadata = await self.external_metadata_service.fetch_metadata(str(order_data["_id"]))
+            invoice.enrich(metadata)
+            
+            # Step 3: Persist the enriched invoice using the repository
             invoice_id = await self.invoice_repository.save(invoice)
-
-            logger.info(f"Invoice successfully created for order ID {order_data['_id']} with invoice ID {invoice_id}")
-
-            return invoice_id  # Return the ID of the created invoice
-
+            
+            if invoice_id:
+                logger.info(f"Invoice successfully created for order ID {order_data['_id']} with invoice ID {invoice_id}")
+            else:
+                logger.error(f"Failed to create invoice for order ID {order_data['_id']}")
+            
+            return invoice_id
         except Exception as e:
-            # Log any errors that occur during the invoice creation process
-            logger.error(f"Error creating invoice for order ID {order_data['_id']}: {e}")
-            raise  # Reraise the exception to be handled by the caller
+            logger.error(f"Error creating invoice for order ID {order_data.get('_id')}: {e}")
+            raise
