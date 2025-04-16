@@ -19,7 +19,7 @@ class Invoice:
         created_at: Optional[datetime] = None,
         metadata: Optional[Dict] = None,
         recommendations: Optional[List[Dict]] = None,
-        status: str = "pending",
+        status: str = "created",
         _id: Optional[ObjectId] = None
     ):
         self._id = _id
