@@ -29,7 +29,7 @@ This demo illustrates how easy it is to integrate a **real-time, event-driven fl
 ## 🧩 Architecture Overview
 
 > 📌 _Image: Adding Digital Receipts in Leafy Store_  
-![Adding Digital Receipts in Leafy Store](./docs/images/adding-digital-receipts-leafy-store.jpg)
+![Adding Digital Receipts in Leafy Store](docs/images/adding-digital-receipts-leafy-store.jpg)
 
 
 
@@ -47,10 +47,8 @@ This demo illustrates how easy it is to integrate a **real-time, event-driven fl
 
 ## 🔄 System Flow Highlights
 
-### ✅ Digital Receipts Activity Diagram
-
 > 📌 _Image: Purchase Workflow_  
-![Digital Receipts Activity Diagram](./docs/images/digital-receipts-activity-diagram.jpg)
+![Digital Receipts Activity Diagram](docs/images/digital-receipts-activity-diagram.jpg)
 
 ---
 
