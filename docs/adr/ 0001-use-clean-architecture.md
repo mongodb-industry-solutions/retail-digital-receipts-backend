@@ -1,4 +1,6 @@
 # ADR 001: Decision to Use Clean Architecture
+ 
+**Date:** April 2025
 
 ## Context
 
@@ -38,7 +40,6 @@ The project is organized following **Clean Architecture** principles, with clear
 - **`application/`**: Contains **use cases** like **`CreateInvoice`**, which implement business workflows.
 - **`infrastructure/`**: Contains **implementations of external systems** (e.g., **MongoDB** repository, **Change Stream listener**).
 - **`interfaces/`**: Contains the **API layer** (e.g., FastAPI routes) and data validation schemas.
-- **`tests/`**: Contains unit and integration tests, ensuring that each part of the system works correctly and can be tested independently.
 
 ### Consequences
 
@@ -51,10 +52,6 @@ The project is organized following **Clean Architecture** principles, with clear
 ### Disadvantages:
 - **Complexity for Small Projects**: The initial design might seem complex for a small demo or project, but it lays a solid foundation for future growth.
 - **Learning Curve**: Developers who are not familiar with **Clean Architecture** may need some time to understand the structure and conventions.
-
-## Final Decision
-
-We will implement the **Invoice Microservice** using **Clean Architecture** principles to ensure that the system is **scalable**, **maintainable**, and **future-proof**. This decision ensures that the code remains modular, easy to extend, and adaptable to future requirements, even as new technologies or functionalities are added.
 
 
 
