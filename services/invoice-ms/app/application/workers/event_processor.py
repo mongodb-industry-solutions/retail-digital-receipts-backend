@@ -3,7 +3,7 @@ import logging
 from app.infrastructure.queue.async_queue import EventQueue
 from app.application.use_cases.create_invoice import CreateInvoice
 from app.domain.repositories.invoice_repository import InvoiceRepository
-from app.domain.services.external_metadata_service import ExternalMetadataService  # Aseguramos importar la interfaz
+from app.domain.services.external_metadata_service import ExternalMetadataService
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -18,7 +18,7 @@ class EventProcessor:
         self, 
         event_queue: EventQueue, 
         invoice_repository: InvoiceRepository,
-        external_metadata_service: ExternalMetadataService  # Nuevo parámetro
+        external_metadata_service: ExternalMetadataService
     ):
         """
         Initialize the EventProcessor.
@@ -29,7 +29,7 @@ class EventProcessor:
             external_metadata_service (ExternalMetadataService): The external service used to fetch enrichment metadata.
         """
         self.event_queue = event_queue
-        # Inyectamos ambas dependencias en el caso de uso
+        # We inject both dependencies into the use case.
         self.create_invoice_use_case = CreateInvoice(invoice_repository, external_metadata_service)
 
     async def process_events(self):

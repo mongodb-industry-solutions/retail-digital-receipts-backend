@@ -8,14 +8,14 @@ class ExternalMetadataService(ABC):
     """
 
     @abstractmethod
-    async def fetch_metadata(self, order_id: str) -> Dict:
+    async def fetch_metadata(self, order_data: dict) -> Dict:
         """
         Fetch external metadata for a given order.
 
         Args:
-            order_id (str): The ID of the order for which metadata is requested.
+            order_data (dict): The complete order data to be enriched with external metadata.
 
         Returns:
-            Dict: A dictionary containing the metadata.
+            Dict: A dictionary containing the enrichment metadata.
         """
         pass

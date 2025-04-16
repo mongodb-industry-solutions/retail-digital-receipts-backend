@@ -3,12 +3,13 @@ import logging
 from fastapi import FastAPI, Request, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
+import os
 
 from app.infrastructure.queue.async_queue import EventQueue
 from app.infrastructure.events.change_listener import MongoChangeStream
 from app.application.workers.event_processor import EventProcessor
 from app.infrastructure.db.mongo_invoice_repository import MongoInvoiceRepository
-from app.infrastructure.services.azure_metadata_enricher import AzureMetadataEnricher
+from app.infrastructure.external_services.azure_metadata_enricher import AzureMetadataEnricher
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

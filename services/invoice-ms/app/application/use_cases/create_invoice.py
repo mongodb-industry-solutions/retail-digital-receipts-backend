@@ -39,7 +39,7 @@ class CreateInvoice:
             invoice = Invoice.from_order(order_data)
             
             # Step 2: Enrich the invoice using the external metadata service
-            metadata = await self.external_metadata_service.fetch_metadata(str(order_data["_id"]))
+            metadata = await self.external_metadata_service.fetch_metadata(order_data)
             invoice.enrich(metadata)
             
             # Step 3: Persist the enriched invoice using the repository
