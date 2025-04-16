@@ -1,15 +1,23 @@
+version: '3'
 services:
-  demoname-backend:
+  invoice-ms:
     build:
-      context: .
-      no_cache: true
-      dockerfile: Dockerfile.backend
-    image: imagename-backend:latest
-    volumes:
-      - ~/.aws/credentials:/root/.aws/credentials:ro
-      - ~/.aws/config:/root/.aws/config:ro
-      - ~/.aws/sso/cache:/root/.aws/sso/cache:rw  # Only make cache writable
+      context: ./services/invoice-ms  # Ruta al microservicio de invoice-ms
     ports:
       - "8000:8000"
-    restart: always
-    container_name: demoname-backend
+    env_file:
+      - ./services/invoice-ms/.env.local
+    networks:
+      - app-network
+
+  # recommendation-ms:
+  #   build:
+  #     context: ./services/recommendation-ms  # Ruta al microservicio de recommendation-ms
+  #   ports:
+  #     - "8001:8000"
+  #   networks:
+  #     - app-network
+
+networks:
+  app-network:
+    driver: bridge
