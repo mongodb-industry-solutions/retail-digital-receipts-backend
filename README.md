@@ -53,14 +53,14 @@ This demo illustrates how easy it is to integrate a **real-time, event-driven fl
 
 ---
 
-### 👤 Use cases in this demo
+### 👤 Use Cases In This Demo:
 
-## ⚡ Event-Driven Invoice Creation  
-> Automatically generate invoices in response to new orders using MongoDB Change Streams
-## 🧾 Download Invoice  
-> Retrieve and display invoice files stored in Blob Storage or generated on demand.
-## 🧍 Instant Recommendation for the User  
-> Deliver personalized product suggestions based on recent purchases, using Vector Search.
+    ## ⚡ Event-Driven Invoice Creation  
+      > Automatically generate invoices in response to new orders using MongoDB Change Streams
+    ## 🧾 Download Invoice  
+      > Retrieve and display invoice files stored in Blob Storage or generated on demand.
+    ## 🧍 Instant Recommendation for the User  
+      > Deliver personalized product suggestions based on recent purchases, using Vector Search.
 
 ---
 
@@ -85,7 +85,7 @@ Makefile
 
 ---
 
-## 📎 Go To Related Components To Set Up Instructions and MS Details
+## 📎 Go to Related Components for Setup Instructions and Microservice Details
 
 - 📄 [`services/invoice-ms/README.md`](services/invoice-ms/README.md)  
 - 📄 [`services/recommendation-ms/README.md`](services/recommendation-ms/README.md)  
