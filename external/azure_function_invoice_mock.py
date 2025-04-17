@@ -27,7 +27,7 @@ from datetime import datetime
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
 @app.route(route="mock-enrichment")  # Public-safe and generic route name
-def invoice_enrichment_mock(req: func.HttpRequest) -> func.HttpResponse:
+def enrichment_mock(req: func.HttpRequest) -> func.HttpResponse:
     """
     Simulates an external enrichment service for invoices.
 
