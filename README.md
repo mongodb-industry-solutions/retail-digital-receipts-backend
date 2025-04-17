@@ -29,7 +29,7 @@ This demo illustrates how easy it is to integrate a **real-time, event-driven fl
 ## 🧩 Architecture Overview
 
 > 📌 _Image: Adding Digital Receipts in Leafy Store_  
-![Adding Digital Receipts in Leafy Store](docs/images/adding-digital-receipts-leafy-store.jpg)
+![image(.docs/images/adding-digital-receipts-leafy-store.png)
 
 
 
@@ -48,7 +48,7 @@ This demo illustrates how easy it is to integrate a **real-time, event-driven fl
 ## 🔄 System Flow Highlights
 
 > 📌 _Image: Purchase Workflow_  
-![Digital Receipts Activity Diagram](docs/images/digital-receipts-activity-diagram.jpg)
+![image](.docs/images/digital-receipts-activity-diagram.png)
 
 ---
 
@@ -90,9 +90,11 @@ Makefile
 - 📄 [`services/recommendation-ms/README.md`](services/recommendation-ms/README.md)  
 - 📄 [`external/azure-functions/fetch-invoice-details/README.md`](external/README.md)  
 
+🔗 To configure the frontend and backend for `order` and `user`, please refer to our previous demo — the starting point for this project: [retail-store-v2](https://github.com/mongodb-industry-solutions/retail-store-v2)
+
 ---
 
-By storing your **invoice data in MongoDB**, you unlock a host of benefits:
+## 💡 By storing your **invoice data in MongoDB**, you unlock a host of benefits:
 
 - 🔐 **Security & Data Privacy**  
   MongoDB Atlas offers field-level encryption, role-based access control (RBAC), auditing, and network isolation, making it ideal for handling sensitive billing and customer data.
