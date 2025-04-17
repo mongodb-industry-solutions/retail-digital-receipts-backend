@@ -27,29 +27,40 @@ from datetime import datetime
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
 @app.route(route="mock-enrichment")  # Public-safe and generic route name
-def enrichment_mock(req: func.HttpRequest) -> func.HttpResponse:
+def invoice_enrichment_mock(req: func.HttpRequest) -> func.HttpResponse:
+    """
+    Simulates an external enrichment service for invoices.
 
-    logging.info("Invoice enrichment request received.")
+    This Azure Function receives order data via HTTP POST,
+    and returns mock enrichment metadata typically provided by external systems
+    such as ERP, payment processors, loyalty engines, and fraud detection tools.
+    
+    It's used by a backend invoice microservice to mimic real-world metadata enrichment.
+    """
+    logging.info("Received request for detailed invoice enrichment.")
 
-    # Try to parse the incoming request body as JSON
+    # Attempt to parse the JSON payload from the request
     try:
         order_data = req.get_json()
     except ValueError:
         return func.HttpResponse("Invalid JSON in request.", status_code=400)
 
-    # Extract order ID and product list
+    # Extract order ID and product list from the request body
     order_id = str(order_data.get("_id", "unknown"))
     products = order_data.get("products", [])
 
-    # Simulate basic financial summary
-    subtotal = sum(item.get("price", {}).get("amount", 0) for item in products)
-    vat_rate = 0.21
-    service_tax_rate = 0.05
-    total_tax = subtotal * (vat_rate + service_tax_rate)
-    discount = 10.0  # Fixed discount (example)
-    total_amount = subtotal + total_tax - discount
-
-    # Construct the enrichment metadata payload
+    try:
+        # Simulate a financial summary based on the products in the order
+        total_amount = sum(item.get("price", {}).get("amount", 0) for item in products)
+        vat_rate = 0.21
+        service_tax_rate = 0.05
+        total_tax = total_amount * (vat_rate + service_tax_rate)
+        subtotal = total_amount - total_tax
+    except Exception as e:
+        logging.error(f"Error during enrichment: {e}")
+        return func.HttpResponse("Error processing request", status_code=500)
+        
+    # Build the enrichment metadata dictionary
     enrichment = {
         "erpDetails": {
             "invoiceNumber": f"ERP-{order_id}",
@@ -57,11 +68,10 @@ def enrichment_mock(req: func.HttpRequest) -> func.HttpResponse:
             "dueDate": datetime.utcnow().strftime("%Y-%m-%d"),
             "subtotal": subtotal,
             "totalTax": total_tax,
-            "discount": discount,
             "totalAmount": total_amount
         },
         "fraudDetection": {
-            "riskScore": 3,  # Example score on a 0–10 scale
+            "riskScore": 3,  # Arbitrary low risk
             "status": "passed"
         },
         "loyaltyRewards": {
@@ -72,16 +82,13 @@ def enrichment_mock(req: func.HttpRequest) -> func.HttpResponse:
             "approvalCode": "APPROVED123",
             "transactionId": f"TX-{order_id}-{datetime.utcnow().strftime('%H%M%S')}"
         },
-        "posData": {
-            "terminalId": "POS-001",
-            "location": "Store #1, Sample City",  # Public-safe placeholder
-            "transactionTime": datetime.utcnow().isoformat()
-        },
         "retrievedAt": datetime.utcnow().isoformat()
     }
 
-    logging.info(f"Enrichment metadata generated for order {order_id}")
+    # Log the generated metadata for observability
+    logging.info(f"Generated enrichment metadata for order {order_id}: {enrichment}")
 
+    # Return the simulated metadata as JSON
     return func.HttpResponse(
         json.dumps(enrichment),
         mimetype="application/json",

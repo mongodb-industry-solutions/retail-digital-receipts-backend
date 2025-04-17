@@ -20,6 +20,8 @@ class InvoiceRenderer:
         recommendations = invoice.get("recommendations", [])[:4]
 
         # Get total amount (from metadata or fallback)
+        subtotal = metadata.get("subtotal", invoice.get("subtotal", 0))
+        tax = metadata.get("totalTax", invoice.get("totalTax", 0))
         total = metadata.get("totalAmount", invoice.get("totalAmount", 0))
 
         # Begin HTML content
@@ -69,62 +71,82 @@ class InvoiceRenderer:
             </style>
           </head>
           <body>
-            <h1>Invoice #{invoice_id}</h1>
-            <p><strong>Date:</strong> {created_at}</p>
-
+            <h1>Pop-Up Store</h1>
+            <small>Created in {created_at}</small>
+            <small>Order Id {invoice_id}</small>
             <h2>Items</h2>
             <table>
               <thead>
                 <tr>
+                  <th>#</th>
                   <th>Product</th>
                   <th>Price</th>
-                  <th>Quantity</th>
                 </tr>
               </thead>
               <tbody>
         """
 
         # Add each item as a table row
+        i = 1
         for item in items:
             name = item.get("name", "Product")
             price = item.get("price", {}).get("amount", 0)
             amount = item.get("amount", 1)
-            html += f"<tr><td>{name}</td><td>${price:.2f}</td><td>{amount}</td></tr>"
+            html += f"<tr><td>{1}</td><td>{name}</td><td>{amount} x ${price:.2f}</td></tr>"
+            i = i+1
 
         # Add total and ERP metadata
         html += f"""
               </tbody>
             </table>
 
-            <p class="total">Total: ${total:.2f}</p>
-
-            <h3>ERP Details</h3>
-            <p><strong>ERP Invoice Number:</strong> {metadata.get('invoiceNumber', '---')}</p>
-            <p><strong>Due Date:</strong> {metadata.get('dueDate', '---')}</p>
-            <p><strong>Payment Terms:</strong> {metadata.get('paymentTerms', '---')}</p>
+            <p class="total">Subtotal: ${subtotal:.2f}</p>
+            <p class="total">Tax: ${tax:.2f}</p>
+            <p class="total">Total: ${total:.2f}</p>            
         """
 
         # Add recommended products only if present
-        if recommendations:
-            html += """
-              <div class="recommendations">
-                <h2>Recommended Products</h2>
-            """
-            for rec in recommendations:
-                product_id = rec.get("productId", "")
-                name = rec.get("name", "")
-                image_url = rec.get("image", "https://via.placeholder.com/150")
-                product_link = f"https://store.com/product/{product_id}"
+        html +=  f"""<div class='products-container'>
+              <p class="ms-0">Based on this order you might also like</p>
+              <div class='recommendations-list mt-3'>"""
+        for rec in recommendations:
+            name = rec.get("name", "")
+            brand = rec.get("brand", "")
+            image_url = rec.get("image", "https://via.placeholder.com/150")
+            vectorSearchScore = rec.get("vectorSearchScore", "")
 
-                html += f"""
-                  <div class="product">
-                    <a href="{product_link}">
-                      <img src="{image_url}" alt="{name}" />
-                    </a>
-                    <div class="product-name">{name}</div>
-                  </div>
-                """
-            html += "</div>"
+            html += f"""
+              <div class="product">
+                <img src="{image_url}" alt="{name}" />
+                <div class="product-name">{name}</div>
+              </div>
+
+                      <div class='PRCard cursorPointer' >
+            <div class='d-flex flex-column'>
+                <div class='scoreContainer'>
+]                        <div class='scorebadge' variant="yellow">
+                            {vectorSearchScore}
+                        </div>
+                </div>
+                <div class='imageContainer'>
+                     <img
+                            src={image_url}
+                            alt={name}
+                            fill
+                            quality={50}
+                            unoptimized
+                            style={{ objectFit: "contain" }}
+                        />
+                </div>
+                <div class='ms-3 me-3 mt-3'>
+                    <p class="name" title={name}>{name}</p>
+                    <p class="brand" title={brand}>{brand}</p>
+                </div>
+            </div>
+        </div>
+            """
+        html += """ </div>
+          </div>"""
 
         # Final HTML closing
         html += """
