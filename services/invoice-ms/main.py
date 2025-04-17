@@ -5,11 +5,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import os
 
+# Queue and background processing
 from app.infrastructure.queue.async_queue import EventQueue
 from app.infrastructure.events.change_listener import MongoChangeStream
 from app.application.workers.event_processor import EventProcessor
+
+# Repositories and services
 from app.infrastructure.db.mongo_invoice_repository import MongoInvoiceRepository
 from app.infrastructure.external_services.azure_metadata_enricher import AzureMetadataEnricher
+from app.infrastructure.blob_storage.azure_blob_service import AzureBlobUploader
+
+# Routers for API endpoints
+from app.interfaces.routes.invoice import router as invoice_router
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -55,6 +62,11 @@ invoice_repository = MongoInvoiceRepository()
 azure_endpoint = os.getenv("AZURE_METADATA_ENDPOINT", "https://your-azure-function-endpoint-url")
 metadata_service = AzureMetadataEnricher(azure_endpoint)
 
+# Instantiate the Azure Blob uploader for storing rendered invoice files (PDF or image).
+# The container name and connection string are loaded from environment variables:
+# AZURE_STORAGE_CONNECTION_STRING and AZURE_BLOB_CONTAINER_NAME.
+blob_uploader = AzureBlobUploader()
+
 # Instantiate the Worker (EventProcessor) by injecting the event queue, repository, and external metadata service.
 worker = EventProcessor(event_queue, invoice_repository, metadata_service)
 
@@ -77,3 +89,7 @@ async def on_startup():
 
 # Include the router if you have additional endpoints.
 app.include_router(router)
+
+# Include the real API router for invoices
+# This enables endpoints like GET /invoices/{invoice_id}/file
+app.include_router(invoice_router)
