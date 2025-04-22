@@ -112,7 +112,7 @@ Makefile
 
 ---
 
-## 👥 Authors & Contributors
+## 👥 Authors
 
 This project was made possible through a close collaboration between domain experts and technical implementers:
 
