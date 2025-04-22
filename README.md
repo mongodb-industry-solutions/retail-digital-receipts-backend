@@ -45,22 +45,25 @@ The solution simulates the generation of digital receipts and personalized recom
 
 ---
 
-### 👤 Use Cases In This Demo:
+## 👤 Use Cases In This Demo:
 
-    ## 1- ⚡ Event-Driven Invoice Creation  
-      > Automatically generate invoices in response to new orders using MongoDB Change Streams
-      > 📌 _Image: Architecture Use Case 1_  
-      ![image](./docs/images/create-invoice-architecture-ecosystem.png)
-    ## 2- 🧾 Download Invoice  
-      > Retrieve and display invoice files stored in Blob Storage or generated on demand.
-      > 📌 _Image: Architecture Use Case 2_  
-      ![image](./docs/images/get-invoice-architecture-ecosystem.png)
-    ## 3- 🔮 Instant Recommendation for the User  
-      > Deliver personalized product suggestions based on recent purchases, using Vector Search.   
-      > 📌 _Image: Setp-Up Use Case 3_  
-      ![image](./docs/images/personalization-set-up.png)
-      > 📌 _Image: Architecture Use Case 3_  
-      ![image](./docs/images/instant-recommendation-to-the-user.png.png)
+### 1 - ⚡ Event-Driven Invoice Creation  
+> Automatically generate invoices in response to new orders using MongoDB Change Streams  
+📌 _Architecture Use Case 1_  
+![Architecture Use Case 1](./docs/images/create-invoice-architecture-ecosystem.png)
+
+### 2 - 🧾 Download Invoice  
+> Retrieve and display invoice files stored in Blob Storage or generated on demand.  
+📌 _Architecture Use Case 2_  
+![Architecture Use Case 2](./docs/images/get-invoice-architecture-ecosystem.png)
+
+### 3 - 🔮 Instant Recommendation for the User  
+> Deliver personalized product suggestions based on recent purchases, using Vector Search.  
+📌 _Set-Up Use Case 3_  
+![Set-Up Use Case 3](./docs/images/personalization-set-up.png)  
+📌 _Architecture Use Case 3_  
+![Architecture Use Case 3](./docs/images/instant-recommendation-to-the-user.png)
+
 
 
 
