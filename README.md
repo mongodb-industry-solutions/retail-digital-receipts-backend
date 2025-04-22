@@ -14,7 +14,6 @@ The solution simulates the generation of digital receipts and personalized recom
 - Deliver real-time **personalized recommendations** using **MongoDB Vector Search** and **VoyageAI**
 - Keep the architecture clean, reactive, and production-inspired, but demo-friendly  
 
-> 💡 The frontend and core backend services (orders, users) are hosted on **Google Cloud Platform (GCP)**, while the microservices for invoices and recommendations are implemented in **Azure**.
 ---
 
 ## 🧩 Architecture Overview
@@ -96,7 +95,7 @@ docker-compose.yml
 .env.example
 Makefile
 ```
-> 📝 _Note : Curious about how and why this system was designed? Read the ADR documentation (Architecture Decision Records) to explore the reasoning behind key architectural and modeling decisions._
+> 📝 _Note 4: Curious about how and why this system was designed? Read the ADR documentation (Architecture Decision Records) to explore the reasoning behind key architectural and modeling decisions._
 ---
 
 ## 📎 Go to Related Components for Setup Instructions and Microservice Details
