@@ -1,29 +1,39 @@
-# infrastructure/blob_storage/azure_blob_service.py
-from azure.storage.blob import BlobClient
-from azure.identity import DefaultAzureCredential
-from typing import BinaryIO
+"""
+azure_blob_service.py – Upload helper for Azure Blob Storage
+
+• Uses DefaultAzureCredential → Managed Identity in Azure, az login in local
+• No connection string or account key required
+"""
+
 import os
+from typing import BinaryIO
+
+from azure.identity import DefaultAzureCredential
+from azure.storage.blob import BlobClient
+
 
 class AzureBlobUploader:
-    def __init__(self):
-        account_url = os.getenv("AZURE_BLOB_ACCOUNT_URL")
-        container_name = os.getenv("AZURE_BLOB_CONTAINER_NAME")
+    """Upload a stream to Azure Blob Storage and return its URL."""
 
-        if not account_url or not container_name:
-            raise ValueError("Missing account URL or container name")
+    def __init__(self) -> None:
+        self._account_url = os.getenv("AZURE_BLOB_ACCOUNT_URL")
+        self._container_name = os.getenv("AZURE_BLOB_CONTAINER_NAME")
 
-        #  DefaultAzureCredential, use Managed Identity in Azure
+        if not self._account_url or not self._container_name:
+            raise ValueError("Missing AZURE_BLOB_ACCOUNT_URL or AZURE_BLOB_CONTAINER_NAME")
+
         self._credential = DefaultAzureCredential()
-        self._account_url = account_url
-        self._container_name = container_name
 
+    # ------------------------------------------------------------------
+    # public
+    # ------------------------------------------------------------------
     def upload_file(self, file_name: str, file_stream: BinaryIO) -> str:
+        """Upload the given stream as <file_name> and return the blob URL."""
         blob_client = BlobClient(
             account_url=self._account_url,
             container_name=self._container_name,
-            blob=file_name,
+            blob_name=file_name,              # <- correct keyword
             credential=self._credential,
         )
         blob_client.upload_blob(file_stream, overwrite=True)
         return blob_client.url
-
