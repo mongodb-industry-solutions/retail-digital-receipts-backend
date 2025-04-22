@@ -1,18 +1,8 @@
-# 🧾 Retail Digital Receipt Demo — Event-Driven Microservices with MongoDB & Azure
+# 🧾 Retail Digital Receipt Demo / Event-Driven Microservices with MongoDB & Azure
 
 This project showcases how to build a **document-centric, event-driven e-commerce architecture** using **MongoDB Atlas** and **Azure microservices**.
 
-The solution simulates digital receipt generation and personalized and recommendations.
-
-This demo illustrates how easy it is to integrate a **real-time, event-driven flow** around your billing system using:
-
-- ✅ MongoDB Change Streams for real-time reactivity  
-- ✅ MongoDB Triggers to decouple responsibilities while keeping microservices boundaries intact 
-- ✅ Azure Functions to simulate external services (ERP, taxes, loyalty)  
-- ✅ MongoDB’s **Vector Search and embedded documents** to personalize invoices and user experiences
-
-> 💡 The frontend and core backend services (orders, users) are hosted on **Google Cloud Platform (GCP)**, while the microservices for invoices and recommendations are implemented in **Azure**.
-
+The solution simulates the generation of digital receipts and personalized recommendations.
 
 ---
 
@@ -20,46 +10,59 @@ This demo illustrates how easy it is to integrate a **real-time, event-driven fl
 
 - Show how **Change Streams** and **Triggers** can power microservices in an event-driven architecture (EDA) 
 - Highlight the power of **MongoDB Atlas** for flexible, document-based modeling and fast data retrieval
-- Simulate **external system integrations** (ERP, taxes, loyalty) easy and fast via **Azure Functions**  
+- Simulate **external system integrations** - such as taxes, fraud detection and loyalty points - quickly and easily via **Azure Functions**  
 - Deliver real-time **personalized recommendations** using **MongoDB Vector Search** and **VoyageAI**
-- Keep the architecture clean, reactive, and production-inspired — but demo-friendly  
+- Keep the architecture clean, reactive, and production-inspired, but demo-friendly  
 
 ---
 
 ## 🧩 Architecture Overview
 
 > 📌 _Image: Adding Digital Receipts in Leafy Store_  
-![image](./docs/adr/images/adding-digital-receipts-leafy-store.png)
+![image](./docs/images/adding-digital-receipts-leafy-store.png)
 
 
 
 | Component        | Cloud | Role |
 |------------------|-------|------|
 | **Frontend & Order/User Management** | GCP (Next.js) | User interface and order processing |
-| **Invoice & Recommendation Services** | Azure App Service | Process and enrich data using Change Streams |
-| **MongoDB Atlas** | Shared | Centralized data layer for orders, invoices, users, and recommendations |
+| **Invoice & Recommendation Services** | Azure App Service | Event-driven invoice creation and instant recommendation for the user  |
+| **MongoDB Atlas** | MongoDB Atlas | Centralized data layer for orders, invoices, users, and recommendations |
 | **Azure Function** | Azure | Mocks external system metadata for invoices |
-| **Voyage AI**     | External | Provides product similarity via vector search |
+| **Voyage AI**     | External | Provides product vector embeddings |
 
-> 📝 _Note: While this demo uses a **single shared MongoDB Atlas database**, each collection could be deployed to **separate databases per service** in a production setup to enable more isolation, scalability, and data governance._
+> 📝 _Note: In this demo, services are distributed across different cloud providers (e.g., Azure for backend microservices and GCP for the frontend). This setup reflects our team's decision to experiment with cross-cloud scenarios. However, from an architectural perspective, all components can be deployed locally or within a single cloud provider, depending on your environment and preferences._
 
 ---
 
 ## 🔄 System Flow Highlights
 
 > 📌 _Image: Purchase Workflow_  
-![image](./docs/adr/images/digital-receipts-activity-diagram.png)
+![image](./docs/images/digital-receipts-activity-diagram.png)
 
 ---
 
-### 👤 Use Cases In This Demo:
+## 👤 Use Cases In This Demo:
 
-    ## ⚡ Event-Driven Invoice Creation  
-      > Automatically generate invoices in response to new orders using MongoDB Change Streams
-    ## 🧾 Download Invoice  
-      > Retrieve and display invoice files stored in Blob Storage or generated on demand.
-    ## 🧍 Instant Recommendation for the User  
-      > Deliver personalized product suggestions based on recent purchases, using Vector Search.
+### 1 - ⚡ Event-Driven Invoice Creation  
+> Automatically generate invoices in response to new orders using MongoDB Change Streams  
+
+### 2 - 🧾 Download Invoice  
+> Retrieve and display invoice files stored in Blob Storage or generated on demand.  
+
+### 3 - 🔮 Instant Recommendation for the User  
+> Deliver personalized product suggestions based on recent purchases, using Vector Search.  
+
+---
+
+## 🏗️ From High-Level Design to Implementation Details
+
+This demo balances **macro-level architecture** with **implementation details** to showcase a fully event-driven flow powered by **MongoDB Change Streams**.
+
+> For simplicity, we use an **in-memory queue in Python** — easily replaceable with production-ready tools like **Azure Service Bus**, **Event Grid**, **Storage Queues**, or **Kafka** via the [MongoDB Kafka Connector](https://www.mongodb.com/docs/kafka-connector/current/).
+
+> 📌 _Image: Event-Driven Invoice Processing Internals_  
+![image](./docs/images/eda-easy-integarton.png)
 
 ---
 
@@ -71,8 +74,7 @@ This demo illustrates how easy it is to integrate a **real-time, event-driven fl
   └── recommendation-ms/                 
 
 /external
-  └── azure-functions/
-      └── fetch-invoice-details/         
+  └── azure_function_invoice_mock.py       
 
 docs/
   └── adr/
@@ -81,14 +83,14 @@ docker-compose.yml
 .env.example
 Makefile
 ```
-
+> 📝 _Note: Curious about how and why this system was designed? Read the ADR documentation (Architecture Decision Records) to explore the reasoning behind key architectural and modeling decisions._
 ---
 
 ## 📎 Go to Related Components for Setup Instructions and Microservice Details
 
 - 📄 [`services/invoice-ms/README.md`](services/invoice-ms/README.md)  
 - 📄 [`services/recommendation-ms/README.md`](services/recommendation-ms/README.md)  
-- 📄 [`external/azure-functions/fetch-invoice-details/README.md`](external/README.md)  
+- 📄 [`external/README.md`](external/README.md)  
 
 🔗 To configure the frontend and backend for `order` and `user`, please refer to our previous demo — the starting point for this project: [retail-store-v2](https://github.com/mongodb-industry-solutions/retail-store-v2)
 
@@ -108,5 +110,29 @@ Makefile
 - 🔄 **From Data Silos to Seamless Access**  
   Invoice data often lives isolated in backend systems like ERPs or legacy databases, making real-time access difficult and creating silos that block innovation and personalization. By storing invoices as rich, flexible documents in MongoDB, you unlock seamless cross-service access and turn billing data into a driver for real-time insights and intelligent experiences.
 
+---
 
-> 🧠 With MongoDB, storing invoices goes beyond persistence—it's the foundation for building a smart, secure, and insight-driven commerce platform.
+## 👥 Authors & Contributors
+
+This project was made possible through a close collaboration between domain experts and technical implementers:
+
+### Lead Authors *(Use Case Ideation & Retail Implementation)*
+- [**Rodrigo Leal**](https://www.linkedin.com/in/rodrigo-leal-5b240121/) – Principal
+- [**Prashant Juttukonda**](https://www.linkedin.com/in/cloudpkj/) – Principal  
+- [**Genevieve Broadhead**](https://www.linkedin.com/in/genevieve-broadhead-271757bb/) – Global Lead, Retail Solutions  
+
+### Developers & Maintainers *(Technical Design & Implementation)*
+- [**Florencia Arin**](https://www.linkedin.com/in/floarin/) – Developer & Maintainer
+- [**Angie Guemes**](https://www.linkedin.com/in/angelica-guemes-estrada/) – Developer & Maintainer  
+
+
+---
+
+## 📚 Related Blogs *(Coming Soon)*
+
+- **Blog 1** – *Coming soon...*
+- **Blog 2** – *Coming soon...*
+
+
+
+
