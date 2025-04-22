@@ -30,7 +30,7 @@ The solution simulates the generation of digital receipts and personalized recom
 | **Invoice & Recommendation Services** | Azure App Service | Event-driven invoice creation and instant recommendation for the user  |
 | **MongoDB Atlas** | MongoDB Atlas | Centralized data layer for orders, invoices, users, and recommendations |
 | **Azure Function** | Azure | Mocks external system metadata for invoices |
-| **Voyage AI**     | External | Provides product vector emmbedings |
+| **Voyage AI**     | External | Provides product vector embeddings |
 
 > 📝 _Note: While this demo uses a **single shared MongoDB Atlas database**, each collection could be deployed to **separate databases per service** in a production setup to enable more isolation, scalability, and data governance._
 
