@@ -2,7 +2,7 @@
 Mock Invoice Enrichment Function
 --------------------------------
 
-Author: Florencia Arin
+Author: Florencia Arin & Angelica Guemes Estrada
 Created for: Retail Invoice Microservice Demo
 
 Mock Invoice Enrichment Service (Azure Function)
