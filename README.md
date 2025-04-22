@@ -31,9 +31,7 @@ The solution simulates the generation of digital receipts and personalized recom
 | **Azure Function** | Azure | Mocks external system metadata for invoices |
 | **Voyage AI**     | External | Provides product vector embeddings |
 
-> 📝 _Note 1: While this demo uses a single shared MongoDB Atlas database, in production, each service would typically use its own database, enabling greater isolation, scalability, and data governance._
-
-> 📝 _Note 2: In this demo, services are distributed across different cloud providers (e.g., Azure for backend microservices and GCP for the frontend). This setup reflects our team's decision to experiment with cross-cloud scenarios. However, from an architectural perspective, all components can be deployed locally or within a single cloud provider, depending on your environment and preferences._
+> 📝 _Note: In this demo, services are distributed across different cloud providers (e.g., Azure for backend microservices and GCP for the frontend). This setup reflects our team's decision to experiment with cross-cloud scenarios. However, from an architectural perspective, all components can be deployed locally or within a single cloud provider, depending on your environment and preferences._
 
 ---
 
@@ -66,8 +64,6 @@ This demo balances **macro-level architecture** with **implementation details** 
 > 📌 _Image: Event-Driven Invoice Processing Internals_  
 ![image](./docs/images/eda-easy-integarton.png)
 
-> 📝 _Note 3: This architecture is designed for extensibility — swap the in-memory queue with any event broker without changing the core flow._
-
 ---
 
 ## 🗂️ Folder Structure
@@ -87,7 +83,7 @@ docker-compose.yml
 .env.example
 Makefile
 ```
-> 📝 _Note 4: Curious about how and why this system was designed? Read the ADR documentation (Architecture Decision Records) to explore the reasoning behind key architectural and modeling decisions._
+> 📝 _Note: Curious about how and why this system was designed? Read the ADR documentation (Architecture Decision Records) to explore the reasoning behind key architectural and modeling decisions._
 ---
 
 ## 📎 Go to Related Components for Setup Instructions and Microservice Details
