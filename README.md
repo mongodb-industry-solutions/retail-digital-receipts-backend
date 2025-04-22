@@ -33,6 +33,7 @@ The solution simulates the generation of digital receipts and personalized recom
 | **Voyage AI**     | External | Provides product vector embeddings |
 
 > 📝 _Note 1: While this demo uses a single shared MongoDB Atlas database, in production, each service would typically use its own database, enabling greater isolation, scalability, and data governance._
+
 > 📝 _Note 2: In this demo, services are distributed across different cloud providers (e.g., Azure for backend microservices and GCP for the frontend). This setup reflects our team's decision to experiment with cross-cloud scenarios. However, from an architectural perspective, all components can be deployed locally or within a single cloud provider, depending on your environment and preferences._
 
 ---
