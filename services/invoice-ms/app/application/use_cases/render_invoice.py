@@ -8,7 +8,7 @@ from app.infrastructure.config.settings import settings
 class RenderInvoiceIfNotExistsUseCase:
     """
     Render the invoice PDF (if needed), upload to Blob Storage,
-    and return a short‑lived SAS URL.
+    and return a short-lived SAS URL.
     """
 
     def __init__(
@@ -28,7 +28,7 @@ class RenderInvoiceIfNotExistsUseCase:
         Returns:
             {
                 "invoice_id": <str>,
-                "download_url": <signed‑url>,
+                "download_url": <signed-url>,
                 "expires_in": <minutes>
             }
         """
@@ -39,8 +39,8 @@ class RenderInvoiceIfNotExistsUseCase:
 
         file_name = f"invoice_{invoice_id}.pdf"
 
-        # If a file URL already exists, skip rendering/upload
-        if not invoice.get("rendered_file_url"):
+        # Re-render if no URL stored or blob was deleted
+        if not invoice.get("rendered_file_url") or not self.uploader.blob_exists(file_name):
             # Render PDF locally
             file_path = self.renderer.render(invoice)
 
