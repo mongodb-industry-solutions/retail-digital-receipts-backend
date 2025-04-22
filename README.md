@@ -23,13 +23,15 @@ The solution simulates the generation of digital receipts and personalized recom
 
 
 
-| Component        | Cloud | Role |
-|------------------|-------|------|
-| **Frontend & Order/User Management** | GCP (Next.js) | User interface and order processing |
-| **Invoice & Recommendation Services** | Azure App Service | Event-driven invoice creation and instant recommendation for the user  |
-| **MongoDB Atlas** | MongoDB Atlas | Centralized data layer for orders, invoices, users, and recommendations |
-| **Azure Function** | Azure | Mocks external system metadata for invoices |
-| **Voyage AI**     | External | Provides product vector embeddings |
+| Component                             | Cloud                   | Role                                                                 |
+|---------------------------------------|-------------------------|----------------------------------------------------------------------|
+| **Frontend & Order/User Management**  | GCP (Next.js)           | User interface and order processing, hosted on GCP                   |
+| **Invoice & Recommendation Services** | Azure App Service (Python) | Event‑driven invoice creation and instant recommendations; microservices hosted on Azure App Service |
+| **MongoDB Atlas**                     | MongoDB Atlas           | Centralized data layer for orders, invoices, users, and recommendations |
+| **Azure Functions**                   | Azure (Python)          | Simulates external metadata service for invoices                     |
+| **Azure Blob Storage**                | Azure                   | Secure, efficient storage of unstructured data                       |
+| **Voyage AI**                         | External AI Service     | Provides product vector embeddings                                   |
+
 
 > 📝 _Note: In this demo, services are distributed across different cloud providers (e.g., Azure for backend microservices and GCP for the frontend). This setup reflects our team's decision to experiment with cross-cloud scenarios. However, from an architectural perspective, all components can be deployed locally or within a single cloud provider, depending on your environment and preferences._
 
