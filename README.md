@@ -45,13 +45,13 @@ The solution simulates the generation of digital receipts and personalized recom
 ## 👤 Use Cases In This Demo:
 
 ### 1 - ⚡ Event-Driven Invoice Creation  
-> Automatically generate invoices in response to new orders using MongoDB Change Streams  
+> Leverage MongoDB Change Streams to automatically trigger invoice generation upon each order checkout, then persist rich, schema‑flexible invoice documents—allowing you to capture complex billing details and adapt your data model as requirements evolve.  
 
 ### 2 - 🧾 Download Invoice  
-> Retrieve and display invoice files stored in Blob Storage or generated on demand.  
+> Retrieve and display invoice files stored in Azure Blob Storage or generated on demand.  
 
-### 3 - 🔮 Instant Recommendation for the User  
-> Deliver personalized product suggestions based on recent purchases, using Vector Search.  
+### 3 - 🔮 AI‑Driven Personalized Recommendations  
+> By capturing data—from receipt transactions to product‑catalog embeddings—in MongoDB’s flexible document model, you unlock your centralized data to power real‑time, purchase‑based recommendations. Vector Search generates instant suggestions, while Atlas Triggers and optimized document‑model schema design ensure lightning‑fast retrieval of user recommendations.
 
 ---
 
