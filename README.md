@@ -47,12 +47,23 @@ The solution simulates the generation of digital receipts and personalized recom
 
 ### 👤 Use Cases In This Demo:
 
-    ## ⚡ Event-Driven Invoice Creation  
+    ## 1- ⚡ Event-Driven Invoice Creation  
       > Automatically generate invoices in response to new orders using MongoDB Change Streams
-    ## 🧾 Download Invoice  
+      > 📌 _Image: Architecture Use Case 1_  
+      ![image](./docs/images/create-invoice-architecture-ecosystem.png)
+    ## 2- 🧾 Download Invoice  
       > Retrieve and display invoice files stored in Blob Storage or generated on demand.
-    ## 🧍 Instant Recommendation for the User  
-      > Deliver personalized product suggestions based on recent purchases, using Vector Search.
+      > 📌 _Image: Architecture Use Case 2_  
+      ![image](./docs/images/get-invoice-architecture-ecosystem.png)
+    ## 3- 🔮 Instant Recommendation for the User  
+      > Deliver personalized product suggestions based on recent purchases, using Vector Search.   
+      > 📌 _Image: Setp-Up Use Case 3_  
+      ![image](./docs/images/personalization-set-up.png)
+      > 📌 _Image: Architecture Use Case 3_  
+      ![image](./docs/images/instant-recommendation-to-the-user.png.png)
+
+
+
 
 ---
 
