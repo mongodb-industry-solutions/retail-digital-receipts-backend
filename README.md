@@ -64,9 +64,18 @@ The solution simulates the generation of digital receipts and personalized recom
 📌 _Architecture Use Case 3_  
 ![Architecture Use Case 3](./docs/images/instant-recommendation-to-the-user.png)
 
+---
 
+## 🏗️ From High-Level Design to Implementation Details
 
+This demo balances **macro-level architecture** with **implementation details** to showcase a fully event-driven flow powered by **MongoDB Change Streams**.
 
+> For simplicity, we use an **in-memory queue in Python** — easily replaceable with production-ready tools like **Azure Service Bus**, **Event Grid**, **Storage Queues**, or **Kafka** via the [MongoDB Kafka Connector](https://www.mongodb.com/docs/kafka-connector/current/).
+
+> 📌 _Image: Event-Driven Invoice Processing Internals_  
+![image](./docs/images/eda-easy-integarton.png)
+
+> 📝 _Note 3: This architecture is designed for extensibility — swap the in-memory queue with any event broker without changing the core flow._
 
 ---
 
@@ -113,9 +122,6 @@ Makefile
 
 - 🔄 **From Data Silos to Seamless Access**  
   Invoice data often lives isolated in backend systems like ERPs or legacy databases, making real-time access difficult and creating silos that block innovation and personalization. By storing invoices as rich, flexible documents in MongoDB, you unlock seamless cross-service access and turn billing data into a driver for real-time insights and intelligent experiences.
-
-
-> 🧠 With MongoDB, storing invoices goes beyond persistence—it's the foundation for building a smart, secure, and insight-driven commerce platform.
 
 ---
 
