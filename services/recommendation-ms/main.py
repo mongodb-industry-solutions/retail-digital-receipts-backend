@@ -1,9 +1,7 @@
 import asyncio
 import logging
-from fastapi import FastAPI, Request, APIRouter
-from fastapi.middleware.cors import CORSMiddleware
-from dotenv import load_dotenv
 import os
+from dotenv import load_dotenv
 
 # Queue and background processing
 from app.infrastructure.queue.async_queue import EventQueue
@@ -11,85 +9,46 @@ from app.infrastructure.events.change_listener import MongoChangeStream
 from app.application.workers.event_processor import EventProcessor
 
 # Repositories and services
-from app.infrastructure.db.mongo_invoice_repository import MongoInvoiceRepository
-from app.infrastructure.external_services.azure_metadata_enricher import AzureMetadataEnricher
-from app.infrastructure.blob_storage.azure_blob_service import AzureBlobUploader
+from app.infrastructure.db.mongo_recommendation_repository import MongoRecommendationRepository
+from app.infrastructure.vector_search.mongo_vector_search_adapter import MongoVectorSearchAdapter
 
-# Routers for API endpoints
-from app.interfaces.routes.invoice import router as invoice_router
-
+# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Load environment variables
+# Load environment variables from .env.local
 load_dotenv()
 
-app = FastAPI()
+async def main():
+    logger.info("Starting Recommendation Microservice...")
 
-# Set up CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+    # Create a shared async queue to exchange events between listener and worker
+    event_queue = EventQueue()
 
-router = APIRouter()
+    # Initialize the MongoDB Change Stream listener (event producer)
+    change_stream = MongoChangeStream(event_queue)
 
-@app.get("/")
-async def read_root(request: Request):
-    """
-    A basic route to confirm the server is running.
-    """
-    return {"message": "Server is running"}
+    # Initialize the recommendation repository for writing recommendation results
+    recommendation_repository = MongoRecommendationRepository()
 
-# Create a single, shared event queue for passing events between tasks.
-# Note: The queue itself is NOT a separate background task; it's just an in-memory
-# structure used by the two background tasks (the Change Stream listener and the Worker).
-event_queue = EventQueue()
+    # Initialize the Vector Search adapter to perform similarity queries
+    vector_search_service = MongoVectorSearchAdapter()
 
-# Instantiate the Change Stream listener (producer),
-# which watches the 'orders' collection for 'insert' events.
-change_stream = MongoChangeStream(event_queue)
+    # Initialize the event processor (worker) with the necessary dependencies
+    worker = EventProcessor(
+        event_queue=event_queue,
+        recommendation_repository=recommendation_repository,
+        vector_search_service=vector_search_service
+    )
 
-# Instantiate the concrete repository for invoices.
-invoice_repository = MongoInvoiceRepository()
+    logger.info("Launching background tasks: MongoDB listener and EventProcessor.")
 
-# Instantiate the external metadata service.
-# Load the Azure metadata endpoint from an environment variable.
-# Even if the URL is constant in production, using an environment variable
-azure_endpoint = os.getenv("AZURE_METADATA_ENDPOINT", "https://your-azure-function-endpoint-url")
-metadata_service = AzureMetadataEnricher(azure_endpoint)
+    # Run the listener and worker concurrently using asyncio
+    await asyncio.gather(
+        change_stream.listen_for_changes(),
+        worker.process_events()
+    )
 
-# Instantiate the Azure Blob uploader for storing rendered invoice files (PDF or image).
-# The container name and connection string are loaded from environment variables:
-# AZURE_STORAGE_CONNECTION_STRING and AZURE_BLOB_CONTAINER_NAME.
-blob_uploader = AzureBlobUploader()
-
-# Instantiate the Worker (EventProcessor) by injecting the event queue, repository, and external metadata service.
-worker = EventProcessor(event_queue, invoice_repository, metadata_service)
-
-@app.on_event("startup")
-async def on_startup():
-    """
-    On application startup, launch two background tasks:
-    1) The Change Stream listener that detects MongoDB 'insert' events.
-    2) The Worker (EventProcessor) that consumes events from the queue and processes them,
-       including enriching invoices with external metadata.
-    
-    Both tasks run concurrently via asyncio, so the API remains responsive.
-    """
-    logger.info("Starting background tasks: Change Stream listener and EventProcessor.")
-    # Task #1: Listen for MongoDB insert events.
-    asyncio.create_task(change_stream.listen_for_changes())
-    # Task #2: Continuously process events from the event queue.
-    asyncio.create_task(worker.process_events())
-    logger.info("Background tasks started successfully.")
-
-# Include the router if you have additional endpoints.
-app.include_router(router)
-
-# Include the real API router for invoices
-# This enables endpoints like GET /invoices/{invoice_id}/file
-app.include_router(invoice_router)
+if __name__ == "__main__":
+    # Entry point of the microservice
+    asyncio.run(main())
