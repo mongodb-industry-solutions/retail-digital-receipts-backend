@@ -86,7 +86,7 @@ docker-compose.yml
 Makefile
 ```
 > 📝 _Note: Curious about how and why this system was designed?  
-> Read the [ADR documentation](./docs/adr/) (Architecture Decision Records) to explore the reasoning behind key architectural and modeling decisions._
+> Read the [ADR documentation](docs/adr/) (Architecture Decision Records) to explore the reasoning behind key architectural and modeling decisions._
 ---
 
 ## 📎 Go to Related Components for Setup Instructions and Microservice Details
