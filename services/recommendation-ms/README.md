@@ -38,6 +38,9 @@ Every time an invoice is created, `recommendation-ms`:
 - **Separation of Concerns**  
   `recommendation-ms` only writes to its own collection. Updates to `users` and `invoices` are handled externally by the Atlas Trigger.
 
+> 📝 _Note: Curious about how and why this system was designed?  
+> Read the [ADR documentation](../../docs/adr/) (Architecture Decision Records) to explore the reasoning behind key architectural and modeling decisions._
+
 ---
 
 ## 📦 Setup Instructions
