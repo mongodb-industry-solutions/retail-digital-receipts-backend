@@ -14,10 +14,13 @@ Every time an invoice is created, `recommendation-ms`:
 3. Performs a vector similarity search against the `products` catalog using MongoDB Atlas Vector Search.
 4. Selects the top 4 similar products and wraps them into a `RecommendationGroup`.
 5. Stores the result in the `recommendations` collection.
-6. Lets an Atlas Trigger propagate the data to:
-   - `users.lastRecommendations`
-   - `invoices.recommendations`
-7. The frontend displays results directly from user and invoice documents — no extra API calls.
+> 💡 _Note: Once the recommendation is saved, an **Atlas Trigger** (outside this service) automatically propagates the data to:_
+>
+> - `users.lastRecommendations`  
+> - `invoices.recommendations`
+>
+_This allows the frontend to display results directly from user and invoice documents — no extra API calls needed.  
+Invoices come pre-filled with recommendations, ready for rendering._
 
 ---
 
