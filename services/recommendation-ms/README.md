@@ -1,4 +1,4 @@
-# 🧠 recommendation-ms
+# 🔮 recommendation-ms
 
 Generates personalized product suggestions based on new purchases.  
 Built with MongoDB Atlas Vector Search, asynchronous queues, and a clean architecture approach.
@@ -9,7 +9,7 @@ Built with MongoDB Atlas Vector Search, asynchronous queues, and a clean archite
 
 Every time an invoice is created, `recommendation-ms`:
 
-1. Extracts the most expensive product from the invoice.
+1. Listens to new invoice inserts via MongoDB Change Streams, and extracts the most expensive product from the invoice.
 2. Retrieves its vector embedding (pre-computed with Voyage AI, stored in the `products` collection).
 3. Performs a vector similarity search against the `products` catalog using MongoDB Atlas Vector Search.
 4. Selects the top 4 similar products and wraps them into a `RecommendationGroup`.
@@ -23,7 +23,7 @@ Every time an invoice is created, `recommendation-ms`:
 
 ## 🧭 Architecture Diagram
 
-![Architecture](docs/images/recommendation-ms.png)
+![Architecture](.docs/images/recommendation-ms.png)
 
 ---
 
@@ -42,15 +42,25 @@ Every time an invoice is created, `recommendation-ms`:
 
 ## 📦 Setup Instructions
 
-1. Copy `.env.example` to `.env` and update the values with your environment.
+> 👉 If you're looking to run the full system (including `invoice-ms`, Azure Functions, and shared MongoDB setup), head to the [main project README](../README.md) for a complete guide.
 
-2. Make sure your MongoDB cluster includes:
-   - ✅ Embeddings stored in the `products.embedding` field  
-   - ✅ A vector index on that field (`product_vector_index`)  
-   - ✅ An Atlas Trigger configured for `recommendations.insert`
+### Running this service in isolation
 
-3. You can run this service in two ways:
-   - Using **Poetry** locally for development.
+You can run `recommendation-ms` independently for development or testing purposes.
+
+1. Copy the environment config:
+   - Duplicate `.env.example` as `.env` and update the values.
+
+2. Make sure the following prerequisites are ready in your MongoDB Atlas cluster:
+   - ✅ Embeddings are stored in the `products.embedding` field
+   - ✅ A vector index named `product_vector_index` is created on that field
+   - ✅ An Atlas Trigger is configured to listen for `recommendations.insert` and update:
+     - `users.lastRecommendations`
+     - `invoices.recommendations`
+
+3. Then you can run the service either way:
+
+**Using Poetry**
 ```bash
 
 poetry install
@@ -58,7 +68,7 @@ poetry shell
 uvicorn main:app --reload
 ```
 
-   - Or using **Docker** with the provided `Dockerfile`.
+**Or using Docker**
 ```bash
 
 docker build -t recommendation-ms .
