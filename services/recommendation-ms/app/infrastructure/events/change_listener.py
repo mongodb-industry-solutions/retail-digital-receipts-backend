@@ -10,27 +10,27 @@ logger = logging.getLogger(__name__)
 
 class MongoChangeStream:
     """
-    Monitors the 'orders' collection in MongoDB, but only listens for 'insert' events.
+    Monitors the 'invoices' collection in MongoDB, but only listens for 'insert' events.
     When an insert occurs, the event is enqueued for asynchronous processing.
 
-    In this demo’s business logic, each new order triggers the generation of an invoice.
+    In this demo’s business logic, each new invoice triggers the generation of a recommendation.
     By filtering only 'insert' events, we ensure that the workflow starts only when a new
-    order document is created, which occurs when a checkout is processed.
+    invoice document is created.
     """
 
     def __init__(self, event_queue):
         """
         Initializes the MongoChangeStream with a reference to an existing event queue  
         - Retrieves a singleton MongoDB client (via get_db()).
-        - Selects the 'orders' collection to watch.
+        - Selects the 'invoices' collection to watch.
         """
         self.db = get_db()
-        self.collection = self.db["orders"]
+        self.collection = self.db["invoices"]
         self.event_queue = event_queue   # <-- Use the queue you passed in
 
     async def listen_for_changes(self):
         """
-        Continuously listens for 'insert' changes on the 'orders' collection.
+        Continuously listens for 'insert' changes on the 'invoices' collection.
 
         - Uses MongoDB's Change Stream with a filter pipeline to detect only inserts.
         - When an insert is detected, logs the event and enqueues it for further processing.
