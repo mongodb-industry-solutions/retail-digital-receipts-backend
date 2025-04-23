@@ -19,18 +19,18 @@ Every time an invoice is created, `recommendation-ms`:
 > - `users.lastRecommendations`  
 > - `invoices.recommendations`
 >
-_This allows the frontend to display results directly from user and invoice documents — no extra API calls needed.  
-Invoices come pre-filled with recommendations, ready for rendering._
+>_This allows the frontend to display results directly from user and invoice documents — no extra API calls needed.  
+> And invoices come pre-filled with recommendations, ready for rendering._
 
 ---
 
-## 🧭 Architecture Diagram
+## 🧩 Architecture Diagram
 
 ![Architecture](../../docs/images/recommendation-ms.png)
 
 ---
 
-## 🧱 Architecture Design
+## 🧠 Architecture Design
 
 - **Event-Driven Choreography**  
   Each service reacts to MongoDB inserts; no service calls another directly.
