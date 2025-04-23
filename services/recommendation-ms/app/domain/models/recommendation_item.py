@@ -1,7 +1,8 @@
+# app/domain/models/recommendation_item.py
 from dataclasses import dataclass
 
 @dataclass
-class Recommendation:
+class RecommendationItem:
     """
     Domain model representing a recommended product, to be embedded
     in the user's profile and optionally associated with the invoice.
