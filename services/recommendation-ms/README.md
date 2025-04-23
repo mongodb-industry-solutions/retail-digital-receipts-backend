@@ -23,7 +23,7 @@ Every time an invoice is created, `recommendation-ms`:
 
 ## 🧭 Architecture Diagram
 
-![image](./docs/images/recommendation-ms.png)
+![Architecture](../../docs/images/recommendation-ms.png)
 
 ---
 
