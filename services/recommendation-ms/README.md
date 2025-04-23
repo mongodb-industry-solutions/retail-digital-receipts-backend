@@ -42,7 +42,7 @@ Every time an invoice is created, `recommendation-ms`:
 
 ## 📦 Setup Instructions
 
-> 👉 If you're looking to run the full system (including `invoice-ms`, Azure Functions, and shared MongoDB setup), head to the [main project README](README.md) for a complete guide.
+> 👉 If you're looking to run the full system (including `invoice-ms`, Azure Functions, and shared MongoDB setup), head to the [main project README](../../README.md) for a complete guide.
 
 ### Running this service in isolation
 
@@ -52,11 +52,12 @@ You can run `recommendation-ms` independently for development or testing purpose
    - Duplicate `.env.example` as `.env` and update the values.
 
 2. Make sure the following prerequisites are ready in your MongoDB Atlas cluster:
-   - ✅ Embeddings are stored in the `products.embedding` field
-   - ✅ A vector index named `product_vector_index` is created on that field
-   - ✅ An Atlas Trigger is configured to listen for `recommendations.insert` and update:
+   - ✅ Embeddings are stored in the `products.embedding` field  
+   - ✅ A vector index named `product_vector_index` exists  
+   - ✅ An [Atlas Trigger](../../external/atlas-triggers) is configured to listen for `recommendations.insert` and update:
      - `users.lastRecommendations`
      - `invoices.recommendations`
+
 
 3. Then you can run the service either way:
 
@@ -76,8 +77,3 @@ docker run --env-file .env -p 8000:8000 recommendation-ms
 ```
 ---
 
-## 🧪 Status
-
-- ✅ Functional prototype  
-- 🛠️ Ready for load testing & analytics pipeline integration  
-- 📈 Ideal entry point for experimentation with Vector Search + Atlas Triggers
