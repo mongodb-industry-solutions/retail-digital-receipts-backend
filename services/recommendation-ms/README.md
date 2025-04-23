@@ -23,7 +23,7 @@ Every time an invoice is created, `recommendation-ms`:
 
 ## 🧭 Architecture Diagram
 
-![Architecture](.docs/images/recommendation-ms.png)
+![image](./docs/images/recommendation-ms.png)
 
 ---
 
@@ -42,7 +42,7 @@ Every time an invoice is created, `recommendation-ms`:
 
 ## 📦 Setup Instructions
 
-> 👉 If you're looking to run the full system (including `invoice-ms`, Azure Functions, and shared MongoDB setup), head to the [main project README](../README.md) for a complete guide.
+> 👉 If you're looking to run the full system (including `invoice-ms`, Azure Functions, and shared MongoDB setup), head to the [main project README](README.md) for a complete guide.
 
 ### Running this service in isolation
 
