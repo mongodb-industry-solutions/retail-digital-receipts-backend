@@ -1,68 +1,54 @@
-from app.domain.repositories.invoice_repository import InvoiceRepository
-from app.domain.models.invoice import Invoice
+from app.domain.repositories.recommendation_repository import RecommendationRepository
+from app.domain.models.recommendation import Recommendation
 from app.infrastructure.db.mongo_client import get_db
 from bson import ObjectId
 
-class MongoInvoiceRepository(InvoiceRepository):
+class MongoRecommendationRepository(RecommendationRepository):
     def __init__(self):
         """
-        Initialize the repository with the MongoDB client and the 'invoices' collection.
+        Initialize the repository with the MongoDB client and the 'recommendation' collection.
         The `get_db()` function should return a singleton database instance.
         """
         self.db = get_db()
-        self.collection = self.db["invoices"]
+        self.collection = self.db["recommendations"]
 
-    async def save(self, invoice: Invoice) -> str:
+    async def save(self, recommendation: Recommendation) -> str:
         """
-        Save the generated invoice to the 'invoices' collection.
+        Save the generated recommendation to the 'recommendations' collection.
         
         Args:
-            invoice (Invoice): The invoice entity to be saved.
+            recommendation (Recommendation): The recommedation entity to be saved.
         
         Returns:
-            str: The inserted invoice ID.
+            str: The inserted recommendation ID.
         """
-        invoice_dict = invoice.to_dict()
-        result = await self.collection.insert_one(invoice_dict)
+        recommendation_dict = recommendation.to_dict()
+        result = await self.collection.insert_one(recommendation_dict)
         return str(result.inserted_id)
 
-    async def find_by_order_id(self, order_id: str) -> Invoice | None:
+    async def find_by_invoice_id(self, invoice_id: str) -> Recommendation| None:
         """
-        Retrieve an invoice by its associated order ID.
+        Retrieve a recommendation by its associated invoice ID.
         
         Args:
-            order_id (str): The order ID associated with the invoice.
+            invoice_id (str): The invoice ID associated with the recommendation.
         
         Returns:
-            Invoice | None: The found invoice or None if not found.
+            Recommendation | None: The found recommendation or None if not found.
         """
-        invoice_doc = await self.collection.find_one({"orderId": order_id})
-        if invoice_doc:
-            return Invoice.from_order(invoice_doc)
+        recommendation_doc = await self.collection.find_one({"invoiceId": invoice_id})
+        if recommendation_doc:
+            return Recommendation.from_invoice(recommendation_doc)
         return None
 
-    def get_by_id(self, invoice_id: str) -> dict:
+    def get_by_id(self, recommendation_id: str) -> dict:
         """
-        Retrieve a raw invoice document by its MongoDB ObjectId.
+        Retrieve a raw recommendation document by its MongoDB ObjectId.
         
         Args:
-            invoice_id (str): The ObjectId of the invoice as a string.
+            recommendation_id (str): The ObjectId of the recommendation as a string.
         
         Returns:
-            dict: The invoice document, or None if not found.
+            dict: The recommendation document, or None if not found.
         """
-        return self.collection.find_one({"_id": ObjectId(invoice_id)})
-
-    def update_rendered_file_url(self, invoice_id: str, file_url: str) -> None:
-        """
-        Update the invoice document with the rendered file URL.
-        This is used to avoid regenerating the file if it already exists.
-        
-        Args:
-            invoice_id (str): The ObjectId of the invoice as a string.
-            file_url (str): The Blob Storage URL of the rendered file.
-        """
-        self.collection.update_one(
-            {"_id": ObjectId(invoice_id)},
-            {"$set": {"rendered_file_url": file_url}}
-        )
+        return self.collection.find_one({"_id": ObjectId(recommendation_id)})
