@@ -20,4 +20,13 @@ Even though this touches product data, the goal is **recommending items**, so th
 We wrap the search behind a `VectorSearchPort`, so we can easily move it later if needed.
 
 ---
+
+## 3. Why this is okay for now
+- `product-ms` doesn’t exist yet
+- This avoids premature complexity
+- The logic here is **read-only**
+- And the port-based design keeps us flexible
+
+---
+
 ## 4.📌 We’ll revisit this when `product-ms` becomes part of the architecture
