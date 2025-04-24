@@ -13,8 +13,8 @@ class Settings(BaseSettings):
     database_name: str
 
     # Atlas Vector Search
-    vector_index_name: str = "product_vector_index"
-    embedding_field: str   = "embedding"  # default; override in .env if ever needed
+    vector_index_name: str
+    embedding_field: str
 
     model_config = {
         "env_file": ".env",
