@@ -64,12 +64,23 @@ Before running this service, make sure you have:
   - `users.lastRecommendations`
   - `invoices.recommendations`
 
-Project setup:
-- 🧾 Clone the repo and navigate to `services/recommendation-ms`
-- 🛠 Create a `.env.local` file based on `.env.EXAMPLE`
+---
+
+## 🛠  Project setup:
+
+- Clone the repo and navigate to `services/recommendation-ms`
+- Create a `.env.local` file based on `.env.EXAMPLE`
 ```bash
 cp .env.EXAMPLE .env.local
 ```
+Make sure to update the variables in .env.local with your own MongoDB URI, Azure crevice.
+- Install dependencies
+```bash
+
+poetry install
+```
+
+---
 
 ## ▶️ Setup (Local, No Docker)
 
@@ -77,9 +88,6 @@ cp .env.EXAMPLE .env.local
 Run the following:
 
 ```bash
-# Install dependencies
-poetry install
-
 # Start the applciation
 poetry run python app/main.py 
 ```
