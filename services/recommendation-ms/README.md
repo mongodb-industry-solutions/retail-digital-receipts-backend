@@ -73,7 +73,7 @@ Before running this service, make sure you have:
 ```bash
 cp .env.EXAMPLE .env.local
 ```
-Make sure to update the variables in .env.local with your own MongoDB URI, Azure crevice.
+Make sure to update the variables in `.env.local` with your own MongoDB URI, Azure credentials, and vector search settings — such as the name of the embedding field and the vector index used in the `products` collection.
 - Install dependencies
 ```bash
 
