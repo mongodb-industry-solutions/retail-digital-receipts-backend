@@ -95,10 +95,8 @@ This grants your service write access to the container so it can upload invoices
 
 ### Step 4 - Create Azure Function
 
-- Create your own Azure Function using the official documentation: [Create your first function in Azure](https://learn.microsoft.com/en-us/azure/azure-functions/create-first-function-vs-code)
+- Create your own Azure Function using the official documentation: [Create your first function in Azure](https://learn.microsoft.com/en-us/azure/azure-functions/functions-create-function-app-portal?pivots=programming-language-python)
 - Use the example provided in this repo: [See example Azure Function implementation](../../external/azure-functions)
-- Once your function is deployed, set the URL in your `.env.local` file as `AZURE_METADATA_ENDPOINT`.
-
 
 ---
 
@@ -108,6 +106,7 @@ Project setup:
 ```bash
 cp .env.EXAMPLE .env.local
 ```
+Make sure to update the variables in .env.local with your own MongoDB URI, Azure credentials, and function URL before running the service.
 
 ## ▶️ Setup (Local, No Docker)
 
