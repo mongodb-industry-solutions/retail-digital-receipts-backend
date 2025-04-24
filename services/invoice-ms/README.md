@@ -38,20 +38,119 @@ Part of the retail demo system using MongoDB Change Streams, Azure Functions, an
 - If rendered file exists → returns it
 - Else → triggers generation, uploads to Blob Storage, and returns link
 
+> 📝 _Note: Curious about how and why this system was designed?  
+> Read the [ADR documentation](../../docs/adr/) (Architecture Decision Records) to explore the reasoning behind key architectural and modeling decisions._
+
+---
+## 📦 Setup Instructions
+
+> 👉 If you're looking to run the full system — including `recommendation-ms`, `invoice-ms`, Azure Functions, Atlas Triggers, the frontend, and order/user management — head to the [main project README](../../README.md) for a complete guide.
+
+
+## 🔧 Prerequisites
+
+Before running this service, make sure you have:
+
+- **Python 3.10** installed (recommended version range: `>=3.10,<3.11`)
+- **Poetry** installed for dependency management ([install guide](https://python-poetry.org/docs/#installation))
+- Access to a **MongoDB Atlas cluster**
+- Load sample data from the [Retail Store Demo – MongoDB Industry Solutions](https://github.com/mongodb-industry-solutions/retail-store-v2/blob/main/resources/omnichannel/README.md)
+- Create a **Azure Account** (if you don’t have one).
+---
+
+## ☁️ Azure Setup (Blob Storage + Metadata Enrichment)
+
+This service uses Azure Blob Storage to store rendered invoices, and also calls an Azure Function to enrich them.
+
+### Step 1 - Install Azure CLI
+
+```bash
+brew install azure-cli  # For macOS
+```
+
+Or follow instructions here:  
+https://learn.microsoft.com/en-us/cli/azure/install-azure-cli
+
+### Step 2 - Login to Azure
+
+```bash
+az login
+```
+
+### Step 3 - Grant Access to Blob Storage (via Azure Portal)
+
+To allow the service to upload files to Azure Blob Storage, follow these steps in the Azure Portal:
+
+1. Go to your **Storage Account**.
+2. In the left sidebar, open **Access Control (IAM)**.
+3. Click **Add role assignment**.
+4. Select the following options:
+   - **Role**: Storage Blob Data Contributor
+   - **Assign access to**: Managed identity (or App registration, depending on your setup)
+   - **Select member**: Choose the identity your service is using
+5. Click **Review + assign**.
+
+This grants your service write access to the container so it can upload invoices.
+
+### Step 4 - Create Azure Function
+
+- Create your own Azure Function using the official documentation: [Create your first function in Azure](https://learn.microsoft.com/en-us/azure/azure-functions/create-first-function-vs-code)
+- Use the example provided in this repo: [See example Azure Function implementation](../../external/azure-functions)
+- Once your function is deployed, set the URL in your `.env.local` file as `AZURE_METADATA_ENDPOINT`.
+
+
+---
+
+Project setup:
+- 🧾 Clone the repo and navigate to `services/invoice-ms`
+- 🛠 Create a `.env.local` file based on `.env.EXAMPLE`
+```bash
+cp .env.EXAMPLE .env.local
+```
+
+## ▶️ Setup (Local, No Docker)
+
+
+Run the following:
+
+```bash
+# Install dependencies
+poetry install
+
+# Start the applciation
+poetry run python app/main.py 
+```
+## 🐳 Setup with Docker
+
+You can run `invoice-ms` in an isolated container using Docker.
+
+🛠️ Build the Docker image
+
+```bash
+docker build -t recommendation-ms .
+```
+
+This will:
+
+Use the official Python 3.10 slim image
+
+Install dependencies via Poetry
+
+Expose port 8000
+
+Run the container
+
+```bash
+docker run --env-file .env.local -p 8000:8000 invoice-ms
+```
+Your service should now be available at:
+http://localhost:8000
+
 ---
 
 ## 📦 Setup Instructions
 
-> 👉 If you're looking to run the full system (including `invoice-ms`, Azure Functions, and shared MongoDB setup), head to the [main project README](../../README.md) for a complete guide.
 
-## 🔧 Prerequisites
-
-- Python 3.10 (recommended)
-- Poetry installed ([guide](https://python-poetry.org/docs/#installation))
-- Access to a MongoDB Atlas cluster
-- Azure Storage credentials (see `.env.example`)
-- Clone the repo and navigate to `services/invoice-ms`
-- Create your `.env.local` file (see `.env.example`)
 
 ## ▶️ Setup (Local, No Docker)
 
@@ -61,9 +160,6 @@ Part of the retail demo system using MongoDB Change Streams, Azure Functions, an
 ```bash
 # Install dependencies
 poetry install
-
-# Activate virtual environment
-poetry shell
 
 # Start the FastAPI server
 poetry run uvicorn main:app --host 0.0.0.0 --port 8000

@@ -48,23 +48,19 @@ Every time an invoice is created, `recommendation-ms`:
 
 ## 📦 Setup Instructions
 
-> 👉 If you're looking to run the full system (including `invoice-ms`, Azure Functions, and shared MongoDB setup), head to the [main project README](../../README.md) for a complete guide.
+> 👉 If you're looking to run the full system — including `recommendation-ms`, `invoice-ms`, Azure Functions, Atlas Triggers, the frontend, and order/user management — head to the [main project README](../../README.md) for a complete guide
 
 ## 🔧 Prerequisites
 
 Before running this service, make sure you have:
 
-- ✅ **Python 3.10** installed (recommended version range: `>=3.10,<3.11`)
-- ✅ **Poetry** installed for dependency management ([install guide](https://python-poetry.org/docs/#installation))
-- ✅ Access to a **MongoDB Atlas cluster**
-
-Optional for realistic demo data:
-- 📦 You can load a sample product catalog **with Voyage AI embeddings** from this repo:  
+- **Python 3.10** installed (recommended version range: `>=3.10,<3.11`)
+- **Poetry** installed for dependency management ([install guide](https://python-poetry.org/docs/#installation))
+- Access to a **MongoDB Atlas cluster**
+- You can load a sample product catalog **with Voyage AI embeddings** from this repo:  
   [Retail Store Demo – MongoDB Industry Solutions](https://github.com/mongodb-industry-solutions/retail-store-v2/blob/main/resources/omnichannel/README.md)
-
-Additional setup requirements:
-- ✅ A **vector index** created on the embedding field in the `products` collection
-- ✅ An [Atlas Trigger](../../external/atlas-triggers) configured to listen to `recommendations.insert` and copy data into:
+- A **vector index** created on the embedding field in the `products` collection
+- An [Atlas Trigger](../../external/atlas-triggers) configured to listen to `recommendations.insert` and copy data into:
   - `users.lastRecommendations`
   - `invoices.recommendations`
 
