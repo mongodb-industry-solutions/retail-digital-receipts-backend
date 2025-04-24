@@ -56,7 +56,7 @@ Before running this service, make sure you have:
 
 - **Python 3.10** installed (recommended version range: `>=3.10,<3.11`)
 - **Poetry** installed for dependency management ([install guide](https://python-poetry.org/docs/#installation))
-- Access to a **MongoDB Atlas cluster**
+- Access to a **MongoDB Atlas cluster** ([get started here](https://www.mongodb.com/atlas/database))
 - You can load a sample product catalog **with Voyage AI embeddings** from this repo:  
   [Retail Store Demo – MongoDB Industry Solutions](https://github.com/mongodb-industry-solutions/retail-store-v2/blob/main/resources/omnichannel/README.md)
 - A **vector index** created on the embedding field in the `products` collection
