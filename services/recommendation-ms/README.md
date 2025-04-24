@@ -82,7 +82,7 @@ poetry install
 
 ---
 
-## ▶️ Setup (Local, No Docker)
+## ▶️ Run (Local, No Docker)
 
 
 Run the following:
@@ -91,7 +91,7 @@ Run the following:
 # Start the applciation
 poetry run python app/main.py 
 ```
-## 🐳 Setup with Docker
+## 🐳 Run with Docker
 
 You can run `invoice-ms` in an isolated container using Docker.
 
