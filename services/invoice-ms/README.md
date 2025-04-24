@@ -110,6 +110,7 @@ cp .env.EXAMPLE .env.local
 Make sure to update the variables in .env.local with your own MongoDB URI, Azure credentials, and function URL before running the service.
 - Install dependencies
 ```bash
+
 poetry install
 ```
 
@@ -128,15 +129,7 @@ poetry run uvicorn main:app --host 0.0.0.0 --port 8000
 
 You can run `invoice-ms` in an isolated container using Docker.
 
-### 🔧 1. Create the environment config
-
-Make sure you have a valid `.env.local` file at the root of `invoice-ms`.  
-Use `.env.example` as a template.
-
-```bash
-cp .env.example .env.local
-```
-### 🛠️ 2. Build the Docker image
+### 🛠️ 1. Build the Docker image
 
 ```bash
 docker build -t invoice-ms .
@@ -152,7 +145,7 @@ Set up FastAPI and your app code
 
 Expose port 8000
 
-### ▶️ 3. Run the container
+### ▶️ 2. Run the container
 
 ```bash
 docker run --env-file .env.local -p 8000:8000 invoice-ms
