@@ -76,8 +76,8 @@ This demo balances **macro-level architecture** with **implementation details** 
   └── recommendation-ms/                 
 
 /external
-  └── azure_function_invoice_mock.py       
-
+  └── atlas-triggers/       
+  └── azure-functions/ 
 docs/
   └── adr/
 
