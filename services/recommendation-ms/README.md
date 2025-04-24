@@ -59,7 +59,7 @@ Before running this service, make sure you have:
 - Access to a **MongoDB Atlas cluster** ([get started here](https://www.mongodb.com/atlas/database))
 - You can load a sample product catalog **with Voyage AI embeddings** from this repo:  
   [Retail Store Demo – MongoDB Industry Solutions](https://github.com/mongodb-industry-solutions/retail-store-v2/blob/main/resources/omnichannel/README.md)
-- A **vector index** created on the embedding field in the `products` collection
+- A **vector index** created on the embedding field in the `products` collection ([click here for more information](https://www.mongodb.com/docs/atlas/atlas-vector-search/))
 - An [Atlas Trigger](../../external/atlas-triggers) configured to listen to `recommendations.insert` and copy data into:
   - `users.lastRecommendations`
   - `invoices.recommendations`
