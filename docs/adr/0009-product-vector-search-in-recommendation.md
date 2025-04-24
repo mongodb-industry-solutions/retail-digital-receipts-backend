@@ -1,32 +1,60 @@
-# ADR 0009 – Product Vector Search Lives in recommendation-ms (for now)
+
+# ADR 0009 – Why Product Vector Search Lives in recommendation-ms (for now)
 
 **Date:** April 2025
 
-## 1. Context
+---
 
-We don’t yet have a dedicated `product-ms`.  
-But `recommendation-ms` needs to find similar products based on what a user just bought, to generate recommendations.
+## What we know for sure
 
-Since product embeddings already live in the shared `products` collection, we’re doing the vector search here — inside `recommendation-ms`.
+We're going to use vector search on the `products` collection — that’s not going to change any time soon.
+
+Right now, `recommendation-ms` needs to access that data to generate suggestions.  
+There’s no `product-ms` exposing embeddings as an API yet.
+
+So doing the vector search **directly from here** is practical, legit, and unproblematic.
 
 ---
 
-## 2. Decision
+## But also...
 
-We perform the product vector search directly in `recommendation-ms`, using MongoDB Atlas Vector Search.
+If one day we do introduce a `product-ms`, it would make sense to move this search there — to respect clear data ownership boundaries.
 
-Even though this touches product data, the goal is **recommending items**, so the logic fits well here — at least for now.
+Still, recommendation logic will likely grow in this service anyway, with:
+- More complex business rules
+- Custom ML models
+- User-aware and context-based ranking
 
-We wrap the search behind a `VectorSearchPort`, so we can easily move it later if needed.
-
----
-
-## 3. Why this is okay for now
-- `product-ms` doesn’t exist yet
-- This avoids premature complexity
-- The logic here is **read-only**
-- And the port-based design keeps us flexible
+So it’s natural for `recommendation-ms` to evolve as the **brain of product suggestions**.
 
 ---
 
-## 4.📌 We’ll revisit this when `product-ms` becomes part of the architecture
+## Design-wise, this makes sense
+
+Yes, this microservice reads from the product catalog.  
+But the decision about *what to recommend and why* clearly belongs here.
+
+As we said:
+
+> “This could be migrated later — but the value lives here.”
+
+That’s exactly why we’re using a **Port**:  
+If tomorrow the way we fetch similar products changes (say, via HTTP to `product-ms`), the business logic stays intact.  
+Only the adapter changes.
+
+---
+
+## A quick note on Ports & Adapters
+
+- A **Port** defines *what the application needs* — in this case:  
+  _“Give me a list of products similar to this embedding.”_  
+  It’s a clean interface, with no technical details.
+
+- An **Adapter** is *how we fulfill that request* — for now, it runs a MongoDB `$vectorSearch` query.  
+  Later, it might call an external API instead.
+
+> Using ports allows us to swap implementations without touching the core logic.
+
+---
+
+##  To revisit when `product-ms` becomes part of the system
