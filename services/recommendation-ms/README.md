@@ -50,6 +50,12 @@ Every time an invoice is created, `recommendation-ms`:
 
 > 👉 If you're looking to run the full system (including `invoice-ms`, Azure Functions, and shared MongoDB setup), head to the [main project README](../../README.md) for a complete guide.
 
+## 🔧 Prerequisites
+
+- Python 3.10 (recommended)
+- Poetry installed ([guide](https://python-poetry.org/docs/#installation))
+- Access to a MongoDB Atlas cluster with Change Streams enabled
+
 ### Running this service in isolation
 
 You can run `recommendation-ms` independently for development or testing purposes.

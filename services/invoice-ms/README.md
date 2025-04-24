@@ -1,49 +1,110 @@
-# Demo Template: Python Backend
+# 🧾 invoice-ms
 
-Python backend section built using [FastAPI](https://fastapi.tiangolo.com/). The backend is managed using Poetry for dependency management, offering a RESTful API.
+Handles creation, enrichment, and rendering of invoices from new orders.  
+Part of the retail demo system using MongoDB Change Streams, Azure Functions, and Clean Architecture.
 
-## Table of Contents
+---
 
-- [Features](#features)
-- [Prerequisites](#prerequisites)
-- [Getting Started](#getting-started)
-  - [Backend Setup](#backend-setup)
+## 🔍 What it does
 
-## Features
+- Listens for new order inserts via MongoDB Change Streams
+- Creates a new invoice based on the order
+- Enriches it using an external Azure Function (mocked for demo)
+- Stores the invoice in MongoDB
+- Renders a PDF/image version of the invoice (on demand)
+- Uploads the rendered file to Azure Blob Storage
+- Provides an API to retrieve the invoice file
 
-- Python backend with a RESTful API powered by FastAPI
-- Dependency management with Poetry ([More info](https://python-poetry.org/docs/basic-usage/))
-- Easy setup and configuration
+> If the invoice hasn't been rendered yet, the endpoint will trigger the rendering and return the result.  
+> The rendered file includes **recommendations inserted by `recommendation-ms`** via an Atlas Trigger.
 
-## Prerequisites
+---
 
-Before you begin, ensure you have met the following requirements:
+## 🏗️ Architecture Overview
 
-- Python 3.10 or higher (but less than 3.11)
-- Poetry (install via [Poetry's official documentation](https://python-poetry.org/docs/#installation))
+### 1. Event-Driven Invoice Creation
 
-For complete setup instructions, including how to create a new repository and clone it, please refer to the [parent README](../README.md).
+![Invoice Creation Flow](../../docs/images/create-invoice-architecture-ecosystem.png)
 
-## Getting Started
+- Change Stream detects `orders.insert`
+- `invoice-ms` creates and saves invoice
+- Calls Azure Function to enrich data (if available)
 
-Follow these steps to set up the backend project locally. For detailed instructions on creating a new repository and using GitHub Desktop, please refer to the [parent README](../README.md).
+### 2. PDF Rendering On-Demand
 
-### Backend Setup
+![Invoice Rendering Flow](../../docs/images/get-invoice-architecture-ecosystem.png)
 
-1. (Optional) Set your project description and author information in the `pyproject.toml` file:
-   ```toml
-   description = "Your Description"
-   authors = ["Your Name <you@example.com>"]
-2. Open the project in your preferred IDE (the standard for the team is Visual Studio Code).
-3. Open the Terminal within Visual Studio Code.
-4. Ensure you are in the root project directory where the `makefile` is located.
-5. Execute the following commands:
-  - Poetry start
-    ````bash
-    make poetry_start
-    ````
-  - Poetry install
-    ````bash
-    make poetry_install
-    ````
-6. Verify that the `.venv` folder has been generated within the `/backend` directory.
+- Endpoint `/invoices/{invoice_id}/file`
+- If rendered file exists → returns it
+- Else → triggers generation, uploads to Blob Storage, and returns link
+
+---
+
+## ⚙️ Setup Instructions
+
+> 👉 If you're looking to run the full system (including `invoice-ms`, Azure Functions, and shared MongoDB setup), head to the [main project README](../../README.md) for a complete guide.
+
+## 🔧 Prerequisites
+
+- Python 3.10 (recommended)
+- Poetry installed ([guide](https://python-poetry.org/docs/#installation))
+- Access to a MongoDB Atlas cluster
+- Azure Storage credentials (see `.env.example`)
+- Clone the repo and navigate to `services/invoice-ms`
+- Create your `.env.local` file (see `.env.example`)
+
+## ▶️ Setup (Local, No Docker)
+
+
+3. Run the following:
+
+```bash
+# Install dependencies
+poetry install
+
+# Activate virtual environment
+poetry shell
+
+# Start the FastAPI server
+poetry run uvicorn main:app --host 0.0.0.0 --port 8000
+```
+## 🐳 Setup with Docker
+
+You can run `invoice-ms` in an isolated container using Docker.
+
+### 🔧 1. Create the environment config
+
+Make sure you have a valid `.env.local` file at the root of `invoice-ms`.  
+Use `.env.example` as a template.
+
+```bash
+cp .env.example .env.local
+```
+### 🛠️ 2. Build the Docker image
+
+```bash
+docker build -t invoice-ms .
+```
+
+This will:
+
+Use the official Python 3.10 slim image
+
+Install dependencies via Poetry
+
+Set up FastAPI and your app code
+
+Expose port 8000
+
+### ▶️ 3. Run the container
+
+```bash
+docker run --env-file .env.local -p 8000:8000 invoice-ms
+```
+Your service should now be available at:
+http://localhost:8000
+
+### 📎 Notes
+Make sure your MongoDB instance and Azure environment variables are reachable from the container.
+
+Azure credentials (for Blob upload) must be correctly set in .env.local.
