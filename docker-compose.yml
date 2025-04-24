@@ -1,23 +1,26 @@
-version: '3'
+version: '3.9'
+
 services:
   invoice-ms:
     build:
-      context: ./services/invoice-ms  # Ruta al microservicio de invoice-ms
+      context: ./services/invoice-ms
+      dockerfile: Dockerfile
+    env_file:
+      - ./services/invoice-ms/.env
+    volumes:
+      - ./services/invoice-ms:/app
+    working_dir: /app
+    command: poetry run uvicorn main:app --host 0.0.0.0 --port 8000
     ports:
       - "8000:8000"
+
+  recommendation-ms:
+    build:
+      context: ./services/recommendation-ms
+      dockerfile: Dockerfile
     env_file:
-      - ./services/invoice-ms/.env.local
-    networks:
-      - app-network
-
-  # recommendation-ms:
-  #   build:
-  #     context: ./services/recommendation-ms  # Ruta al microservicio de recommendation-ms
-  #   ports:
-  #     - "8001:8000"
-  #   networks:
-  #     - app-network
-
-networks:
-  app-network:
-    driver: bridge
+      - ./services/recommendation-ms/.env
+    volumes:
+      - ./services/recommendation-ms:/app
+    working_dir: /app
+    command: poetry run python main.py

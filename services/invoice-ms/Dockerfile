@@ -1,14 +1,13 @@
-# Use the official Python image (version 3.10-slim) as the base image
+# Base image
 FROM python:3.10-slim-buster
 
-# Set environment variable to avoid interactive prompts during build
-ENV DEBIAN_FRONTEND=noninteractive
-ENV GET_POETRY_IGNORE_DEPRECATION=1
+# Avoid interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive \
+    GET_POETRY_IGNORE_DEPRECATION=1
 
-# Set working directory
 WORKDIR /app
 
-# 👉 Install system dependencies required for WeasyPrint
+# Install system dependencies for PDF rendering
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpango-1.0-0 \
@@ -17,29 +16,20 @@ RUN apt-get update && apt-get install -y \
     libffi-dev \
     curl \
     git \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
-# Step 1: Copy Poetry files first to install dependencies separately
-COPY invoice-ms/pyproject.toml invoice-ms/poetry.lock /app/
+# Copy Poetry files and install dependencies
+COPY pyproject.toml poetry.lock /app/
+RUN pip install poetry==1.8.4 \
+  && poetry config virtualenvs.in-project true \
+  && poetry install --no-interaction --no-root
 
-# Step 2: Install Poetry
-RUN pip install poetry==1.8.4
+# Copy application code
+COPY . /app
 
-# Step 3: Configure Poetry to install in the project directory
-RUN poetry config virtualenvs.in-project true
-
-# Step 4: Install project dependencies
-RUN poetry install --no-interaction --no-root
-
-# Step 5: Copy application code
-COPY ./invoice-ms /app/
-
-# Step 6: Copy environment variables
-COPY invoice-ms/.env.local /app/.env.local
-
-# Step 7: Expose port for FastAPI
+# Expose FastAPI port
 EXPOSE 8000
 
-# Step 8: Run FastAPI app with Uvicorn
+# Start the app
 CMD ["poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

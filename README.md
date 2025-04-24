@@ -97,6 +97,52 @@ Makefile
 
 🔗 To configure the frontend and backend for `order` and `user`, please refer to our previous demo — the starting point for this project: [retail-store-v2](https://github.com/mongodb-industry-solutions/retail-store-v2)
 
+🚀 Running the Microservices
+Once your .env files are correctly placed in:
+
+services/invoice-ms/.env
+
+services/recommendation-ms/.env
+
+You're ready to go! Here's how to use the provided Makefile:
+
+🔧 1. Build and Start Everything
+bash
+
+make build
+Builds Docker images for both invoice-ms and recommendation-ms
+
+Starts the containers in detached mode (-d)
+
+Automatically installs dependencies using Poetry (defined in Dockerfile)
+
+▶️ 2. Start Services (after a stop)
+bash
+
+make start
+Starts already-built containers without rebuilding.
+
+⏹ 3. Stop Services (without removing)
+bash
+
+make stop
+Stops the containers but keeps volumes and networks.
+
+🧹 4. Clean Everything (use with caution!)
+bash
+
+make clean
+Stops all containers
+
+Removes containers, networks, volumes, and built images
+
+🐍 5. (Optional) Install dependencies locally
+bash
+
+make poetry_install_invoice
+make poetry_install_recommendation
+Installs dependencies using Poetry for each microservice if you're working outside Docker.
+
 ---
 
 ## 💡 By storing your **invoice data in MongoDB**, you unlock a host of benefits:
