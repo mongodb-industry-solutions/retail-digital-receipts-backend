@@ -109,51 +109,9 @@ cp .env.EXAMPLE .env.local
 ```
 Make sure to update the variables in .env.local with your own MongoDB URI, Azure credentials, and function URL before running the service.
 
-## ▶️ Setup (Local, No Docker)
-
-
-Run the following:
-
-```bash
-# Install dependencies
-poetry install
-
-# Start the applciation
-poetry run python app/main.py 
-```
-## 🐳 Setup with Docker
-
-You can run `invoice-ms` in an isolated container using Docker.
-
-🛠️ Build the Docker image
-
-```bash
-docker build -t recommendation-ms .
-```
-
-This will:
-
-Use the official Python 3.10 slim image
-
-Install dependencies via Poetry
-
-Expose port 8000
-
-Run the container
-
-```bash
-docker run --env-file .env.local -p 8000:8000 invoice-ms
-```
-Your service should now be available at:
-http://localhost:8000
-
 ---
 
-## 📦 Setup Instructions
-
-
-
-## ▶️ Setup (Local, No Docker)
+## ▶️ Run the MS (Local, No Docker)
 
 
 3. Run the following:
@@ -165,7 +123,7 @@ poetry install
 # Start the FastAPI server
 poetry run uvicorn main:app --host 0.0.0.0 --port 8000
 ```
-## 🐳 Setup with Docker
+## 🐳 Run with Docker
 
 You can run `invoice-ms` in an isolated container using Docker.
 
@@ -201,7 +159,4 @@ docker run --env-file .env.local -p 8000:8000 invoice-ms
 Your service should now be available at:
 http://localhost:8000
 
-### 📎 Notes
-Make sure your MongoDB instance and Azure environment variables are reachable from the container.
-
-Azure credentials (for Blob upload) must be correctly set in .env.local.
+---
