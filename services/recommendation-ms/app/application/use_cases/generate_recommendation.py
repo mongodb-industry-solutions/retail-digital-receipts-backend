@@ -3,17 +3,19 @@
 """
 Use Case – Generate Recommendation
 
-This use case is triggered when a new invoice is inserted.
-It extracts the most expensive product from the invoice,
-retrieves its embedding, runs a vector search to find similar products,
-and stores the recommendation in the database.
+Triggered by a new invoice insert:
+  • Extract the most expensive product
+  • Run vector search to find similar products
+  • Wrap results in a RecommendationGroup
+  • Persist via the repository
 """
 
 import logging
 from app.domain.ports.vector_search_port import VectorSearchPort
 from app.domain.repositories.recommendation_repository import RecommendationRepository
-from app.domain.models.recommendation import Recommendation
+from app.domain.models.recommendation_group import RecommendationGroup
 from app.domain.models.recommendation_item import RecommendationItem
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +31,8 @@ class GenerateRecommendation:
         Args:
             invoice (dict): The full invoice document received via Change Stream.
         """
-        logger.info("Generating recommendation for invoice: %s", invoice.get("_id"))
+        invoice_id = invoice.get("_id")
+        logger.info("Generating recommendation for invoice: %s", invoice_id)
 
         # Step 1: Extract the most expensive product
         products = invoice.get("products", [])
@@ -45,16 +48,17 @@ class GenerateRecommendation:
             return
 
         # Step 2: Perform vector search
-        similar_products: list[RecommendationItem] = await self.vector_search.find_similar_products(embedding)
+        similar_items: list[RecommendationItem] = await self.vector_search.find_similar_products(embedding)
 
-        # Step 3: Build and save the Recommendation
-        recommendation = Recommendation(
+        # Step 3: Build and save the RecommendationGroup
+        recommendation_group = RecommendationGroup(
             user_id=invoice["userId"],
-            invoice_id=str(invoice["_id"]),
-            items=similar_products
+            invoice_id=str(invoice_id),
+            created_at=datetime.utcnow(),
+            items=similar_items
         )
 
-        inserted_id = await self.repository.save(recommendation)
+        inserted_id = await self.repository.save(recommendation_group)
         logger.info("Recommendation saved with ID: %s", inserted_id)
 # ---
         # Example of the saved document in MongoDB (recommendations collection):

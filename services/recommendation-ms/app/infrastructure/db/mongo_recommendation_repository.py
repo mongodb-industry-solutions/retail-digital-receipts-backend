@@ -1,4 +1,6 @@
- """
+# app/infrastructure/db/mongo_recommendation_repository.py
+
+"""
 Infrastructure adapter: MongoDB repository for RecommendationGroup documents.
 
 Responsible ONLY for persistence details; business logic lives in the application layer.
@@ -10,26 +12,23 @@ from bson import ObjectId
 from datetime import datetime
 from motor.motor_asyncio import AsyncIOMotorCollection
 
+from app.domain.repositories.recommendation_repository import RecommendationRepository
 from app.domain.models.recommendation_group import RecommendationGroup
+from app.domain.models.recommendation_item import RecommendationItem
 from app.infrastructure.db.mongo_client import get_db  # singleton helper
 
 logger = logging.getLogger(__name__)
 
-
-class MongoRecommendationRepository:
+class MongoRecommendationRepository(RecommendationRepository):
     """
     Concrete implementation of the RecommendationRepository port
     using Motor (async MongoDB driver).
     """
 
     def __init__(self) -> None:
-        db = get_db()                              # singleton Motor database
+        db = get_db()  # singleton Motor database
         self.collection: AsyncIOMotorCollection = db["recommendations"]
         logger.info("MongoRecommendationRepository initialised (collection: recommendations)")
-
-    # ------------------------------------------------------------------ #
-    # Write                                                               #
-    # ------------------------------------------------------------------ #
 
     async def save(self, group: RecommendationGroup) -> str:
         """
@@ -39,16 +38,24 @@ class MongoRecommendationRepository:
             "userId": group.user_id,
             "invoiceId": group.invoice_id,
             "createdAt": group.created_at or datetime.utcnow(),
-            "items": [item.__dict__ for item in group.items],
+            "items": [
+                {
+                    "productId": item.product_id,
+                    "name": item.name,
+                    "brand": item.brand,
+                    "price": item.price,
+                    "image": item.image,
+                    "vectorSearchScore": item.vector_search_score
+                }
+                for item in group.items
+            ],
         }
         result = await self.collection.insert_one(doc)
-        logger.debug("Saved recommendations for invoice %s (id=%s)",
-                     group.invoice_id, result.inserted_id)
+        logger.debug(
+            "Saved recommendations for invoice %s (id=%s)",
+            group.invoice_id, result.inserted_id
+        )
         return str(result.inserted_id)
-
-    # ------------------------------------------------------------------ #
-    # Reads                                                               #
-    # ------------------------------------------------------------------ #
 
     async def find_by_invoice_id(self, invoice_id: str) -> Optional[RecommendationGroup]:
         """
@@ -59,11 +66,23 @@ class MongoRecommendationRepository:
             logger.debug("No recommendations found for invoice %s", invoice_id)
             return None
 
+        items = [
+            RecommendationItem(
+                product_id = item["productId"],
+                name = item["name"],
+                brand = item["brand"],
+                price = item["price"],
+                image = item["image"],
+                vector_search_score = item["vectorSearchScore"]
+            )
+            for item in doc.get("items", [])
+        ]
+
         group = RecommendationGroup(
-            user_id=doc["userId"],
-            invoice_id=doc["invoiceId"],
-            created_at=doc["createdAt"],
-            items=[item for item in doc["items"]],
+            user_id = doc["userId"],
+            invoice_id = doc["invoiceId"],
+            created_at = doc.get("createdAt", datetime.utcnow()),
+            items = items
         )
         logger.debug("Loaded recommendations for invoice %s", invoice_id)
         return group

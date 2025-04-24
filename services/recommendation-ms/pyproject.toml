@@ -9,11 +9,11 @@ packages = [{ include = "app" }]
 [tool.poetry.dependencies]
 python = ">=3.10,<3.11"
 pymongo = "^4.10.1"
-python-dotenv = "^1.0.1"
-motor = "^3.7.0"
-pydantic = ">=2.7,<3.0"
-pydantic-settings = "^2.8.1"
-httpx = "^0.28.1"
+motor = "^3.7.0"  # Async MongoDB client
+python-dotenv = "^1.0.1"  # Load environment variables from .env files
+pydantic = ">=2.7,<3.0"  # Data validation
+pydantic-settings = "^2.8.1"  # Environment-based config management
+httpx = "^0.28.1"  # Async HTTP client
 
 [build-system]
 requires = ["poetry-core"]

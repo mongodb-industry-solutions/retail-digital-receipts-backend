@@ -89,7 +89,7 @@ Run the following:
 
 ```bash
 # Start the applciation
-poetry run python app/main.py 
+poetry run python main.py
 ```
 ## 🐳 Run with Docker
 
