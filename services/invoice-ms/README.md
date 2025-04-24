@@ -40,7 +40,7 @@ Part of the retail demo system using MongoDB Change Streams, Azure Functions, an
 
 ---
 
-## ⚙️ Setup Instructions
+## 📦 Setup Instructions
 
 > 👉 If you're looking to run the full system (including `invoice-ms`, Azure Functions, and shared MongoDB setup), head to the [main project README](../../README.md) for a complete guide.
 

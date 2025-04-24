@@ -52,40 +52,66 @@ Every time an invoice is created, `recommendation-ms`:
 
 ## 🔧 Prerequisites
 
-- Python 3.10 (recommended)
-- Poetry installed ([guide](https://python-poetry.org/docs/#installation))
-- Access to a MongoDB Atlas cluster with Change Streams enabled
+Before running this service, make sure you have:
 
-### Running this service in isolation
+- ✅ **Python 3.10** installed (recommended version range: `>=3.10,<3.11`)
+- ✅ **Poetry** installed for dependency management ([install guide](https://python-poetry.org/docs/#installation))
+- ✅ Access to a **MongoDB Atlas cluster**
 
-You can run `recommendation-ms` independently for development or testing purposes.
+Optional for realistic demo data:
+- 📦 You can load a sample product catalog **with Voyage AI embeddings** from this repo:  
+  [Retail Store Demo – MongoDB Industry Solutions](https://github.com/mongodb-industry-solutions/retail-store-v2/blob/main/resources/omnichannel/README.md)
 
-1. Copy the environment config:
-   - Duplicate `.env.example` as `.env` and update the values.
+Additional setup requirements:
+- ✅ A **vector index** created on the embedding field in the `products` collection
+- ✅ An [Atlas Trigger](../../external/atlas-triggers) configured to listen to `recommendations.insert` and copy data into:
+  - `users.lastRecommendations`
+  - `invoices.recommendations`
 
-2. Make sure the following prerequisites are ready in your MongoDB Atlas cluster:
-   - ✅ Embeddings are stored in the `products.embedding` field  
-   - ✅ A vector index named `product_vector_index` exists  
-   - ✅ An [Atlas Trigger](../../external/atlas-triggers) is configured to listen for `recommendations.insert` and update:
-     - `users.lastRecommendations`
-     - `invoices.recommendations`
-
-
-3. Then you can run the service either way:
-
-**Using Poetry**
+Project setup:
+- 🧾 Clone the repo and navigate to `services/recommendation-ms`
+- 🛠 Create a `.env.local` file based on `.env.EXAMPLE`
 ```bash
+cp .env.EXAMPLE .env.local
+```
 
+## ▶️ Setup (Local, No Docker)
+
+
+Run the following:
+
+```bash
+# Install dependencies
 poetry install
-poetry shell
-uvicorn main:app --reload
-```
 
-**Or using Docker**
+# Start the applciation
+poetry run python app/main.py 
+```
+## 🐳 Setup with Docker
+
+You can run `invoice-ms` in an isolated container using Docker.
+
+🛠️ Build the Docker image
+
 ```bash
-
 docker build -t recommendation-ms .
-docker run --env-file .env -p 8000:8000 recommendation-ms
 ```
+
+This will:
+
+Use the official Python 3.10 slim image
+
+Install dependencies via Poetry
+
+Expose port 8000
+
+Run the container
+
+```bash
+docker run --env-file .env.local -p 8000:8000 invoice-ms
+```
+Your service should now be available at:
+http://localhost:8000
+
 ---
 
