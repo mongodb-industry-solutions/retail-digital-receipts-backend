@@ -76,8 +76,8 @@ This demo balances **macro-level architecture** with **implementation details** 
   └── recommendation-ms/                 
 
 /external
-  └── azure_function_invoice_mock.py       
-
+  └── atlas-triggers/       
+  └── azure-functions/ 
 docs/
   └── adr/
 
@@ -85,7 +85,8 @@ docker-compose.yml
 .env.example
 Makefile
 ```
-> 📝 _Note: Curious about how and why this system was designed? Read the ADR documentation (Architecture Decision Records) to explore the reasoning behind key architectural and modeling decisions._
+> 📝 _Note: Curious about how and why this system was designed?  
+> Read the [ADR documentation](docs/adr/) (Architecture Decision Records) to explore the reasoning behind key architectural and modeling decisions._
 ---
 
 ## 📎 Go to Related Components for Setup Instructions and Microservice Details

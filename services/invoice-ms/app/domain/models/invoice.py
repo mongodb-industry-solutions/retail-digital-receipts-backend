@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List, Dict, Optional
 from bson import ObjectId
-import logging  # <-- Necesario para usar logger
+import logging
 
 logger = logging.getLogger(__name__)
 

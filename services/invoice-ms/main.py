@@ -1,3 +1,28 @@
+"""
+Main entrypoint – Invoice Microservice
+
+Software Design Notes (for students/devs):
+
+This microservice follows a Clean Architecture approach, extended with asynchronous background processing.
+
+Key design ideas:
+
+- MongoDB Change Streams trigger the microservice when a new order is inserted.
+- An in-memory queue buffers events between the listener and the business logic.
+- A background worker (EventProcessor) enriches the invoice with external metadata and saves it.
+- Invoices can be rendered later as PDF/images and uploaded to Azure Blob Storage.
+- The API layer (FastAPI) exposes endpoints to request the rendered invoices on-demand.
+
+Design patterns in use:
+-Event-Driven Architecture for automation and reactivity
+-Asynchronous workers to keep the API responsive
+-Dependency Injection for easy testing and separation of concerns
+
+Great for learning:
+-Real-world event processing flow
+-Integration with cloud services
+-Clear split between infrastructure and business logic
+"""
 import asyncio
 import logging
 from fastapi import FastAPI, Request, APIRouter

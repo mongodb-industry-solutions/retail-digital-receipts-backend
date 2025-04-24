@@ -1,40 +1,39 @@
-from app.domain.models.invoice import Invoice
+"""Domain - Repository Port for Recommendations."""
+
 from abc import ABC, abstractmethod
+from typing import Optional
 
-class InvoiceRepository(ABC):
+from app.domain.models.recommendation_group import RecommendationGroup
+
+
+class RecommendationRepository(ABC):
     """
-    The InvoiceRepository interface defines the methods needed to interact with the persistence layer for invoices.
-    
-    The purpose of this interface is to decouple the business logic from the specific infrastructure being used 
-    (e.g., MongoDB). This allows for flexibility in changing the database or storage solution without affecting the core application.
-    
-    Methods:
-        save(invoice: Invoice) -> str: Saves an invoice to the database.
-        find_by_order_id(order_id: str) -> Invoice: Retrieves an invoice by its associated order ID.
+    Port that isolates the application layer from the persistence layer.
+
+    • Keeps business logic agnostic of MongoDB (or any other store).  
+    • Works with the *domain* model `RecommendationGroup`.  
     """
-    
+
+    # --------------------------------------------------------------- #
+    # Writes                                                          #
+    # --------------------------------------------------------------- #
     @abstractmethod
-    async def save(self, invoice: Invoice) -> str:
+    async def save(self, group: RecommendationGroup) -> str:
         """
-        Save the invoice to the database.
+        Persist a new RecommendationGroup.
 
-        Args:
-            invoice (Invoice): The invoice to be saved.
-
-        Returns:
-            str: The ID of the saved invoice.
+        Returns the inserted document ID as a string.
         """
-        pass
+        raise NotImplementedError
 
+    # --------------------------------------------------------------- #
+    # Reads                                                           #
+    # --------------------------------------------------------------- #
     @abstractmethod
-    async def find_by_order_id(self, order_id: str) -> Invoice:
+    async def find_by_invoice_id(self, invoice_id: str) -> Optional[RecommendationGroup]:
         """
-        Retrieve an invoice by the associated order ID.
+        Retrieve the recommendations linked to a given invoice.
 
-        Args:
-            order_id (str): The order ID associated with the invoice.
-        
-        Returns:
-            Invoice: The invoice corresponding to the provided order ID.
+        Returns None if no document is found.
         """
-        pass
+        raise NotImplementedError
