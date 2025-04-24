@@ -53,6 +53,10 @@ Before running this service, make sure you have:
 
 - **Python 3.10** installed (recommended version range: `>=3.10,<3.11`)
 - **Poetry** installed for dependency management ([install guide](https://python-poetry.org/docs/#installation))
+```bash
+# Install dependencies
+poetry install
+```
 - Access to a **MongoDB Atlas cluster** ([get started here](https://www.mongodb.com/atlas/database))
 - Load sample data from the [Retail Store Demo – MongoDB Industry Solutions](https://github.com/mongodb-industry-solutions/retail-store-v2/blob/main/resources/omnichannel/README.md)
 - Create an **Azure Account** (if you don’t have one):  
@@ -117,9 +121,6 @@ Make sure to update the variables in .env.local with your own MongoDB URI, Azure
 3. Run the following:
 
 ```bash
-# Install dependencies
-poetry install
-
 # Start the FastAPI server
 poetry run uvicorn main:app --host 0.0.0.0 --port 8000
 ```
