@@ -100,9 +100,10 @@ This grants your service write access to the container so it can upload invoices
 
 ---
 
-Project setup:
-- 🧾 Clone the repo and navigate to `services/invoice-ms`
-- 🛠 Create a `.env.local` file based on `.env.EXAMPLE`
+## 🛠  Project setup:
+
+- Clone the repo and navigate to `services/invoice-ms`
+- Create a `.env.local` file based on `.env.EXAMPLE`
 ```bash
 cp .env.EXAMPLE .env.local
 ```
