@@ -82,7 +82,6 @@ docs/
   └── adr/
 
 docker-compose.yml
-.env.example
 Makefile
 ```
 > 📝 _Note: Curious about how and why this system was designed?  
@@ -103,7 +102,7 @@ Each microservice has its own README covering setup steps, required dependencies
 
 This project includes multiple microservices managed with Docker Compose and controlled via a Makefile.
 
-### ✅ Prerequisites
+### Prerequisites
 
 - [Docker](https://www.docker.com/)
 - [Docker Compose](https://docs.docker.com/compose/)
@@ -111,7 +110,7 @@ This project includes multiple microservices managed with Docker Compose and con
 
 > Please refer to the individual `README.md` files inside each service folder for more set up details.
 
-### 🚀 How to Run All Services
+### How to Run All Services
 
 1. **Clone the repository:**
 
@@ -139,7 +138,7 @@ This project includes multiple microservices managed with Docker Compose and con
 
 ---
 
-# 💡 By storing your **invoice data in MongoDB**, you unlock a host of benefits:
+## 💡 By storing your **invoice data in MongoDB**, you unlock a host of benefits:
 
 - 🔐 **Security & Data Privacy**  
   MongoDB Atlas offers field-level encryption, role-based access control (RBAC), auditing, and network isolation, making it ideal for handling sensitive billing and customer data.
@@ -155,7 +154,7 @@ This project includes multiple microservices managed with Docker Compose and con
 
 ---
 
-# 👥 Authors
+## 👥 Authors
 
 This project was made possible through a close collaboration between domain experts and technical implementers:
 
@@ -171,7 +170,7 @@ This project was made possible through a close collaboration between domain expe
 
 ---
 
-# 📚 Related Blogs *(Coming Soon)*
+## 📚 Related Blogs *(Coming Soon)*
 
 - **Blog 1** – *Coming soon...*
 - **Blog 2** – *Coming soon...*
