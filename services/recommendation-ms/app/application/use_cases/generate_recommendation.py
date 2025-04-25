@@ -24,42 +24,47 @@ class GenerateRecommendation:
         self.vector_search = vector_search
         self.repository = repository
 
-    async def execute(self, invoice: dict):
-        """
-        Main method to generate and persist a product recommendation based on the invoice.
+    async def execute(self, invoice: dict) -> bool:
+    """
+    Main method to generate and persist a product recommendation based on the invoice.
 
-        Args:
-            invoice (dict): The full invoice document received via Change Stream.
-        """
-        invoice_id = invoice.get("_id")
-        logger.info("Generating recommendation for invoice: %s", invoice_id)
+    Args:
+        invoice (dict): The full invoice document received via Change Stream.
 
-        # Step 1: Extract the most expensive product
-        products = invoice.get("items") or invoice.get("products", [])
-        if not products:
-            logger.warning("Invoice has no products, skipping.")
-            return
+    Returns:
+        bool: True if a recommendation was generated and saved, False otherwise.
+    """
+    invoice_id = invoice.get("_id")
+    logger.info("Generating recommendation for invoice: %s", invoice_id)
 
-        most_expensive = max(products, key=lambda p: p.get("price", 0))
-        embedding = most_expensive.get("embedding")
+    # Step 1: Extract the most expensive product
+    products = invoice.get("items") or invoice.get("products", [])
+    if not products:
+        logger.warning("Invoice has no products, skipping.")
+        return False
 
-        if not embedding:
-            logger.warning("No embedding found in most expensive product: %s", most_expensive)
-            return
+    most_expensive = max(products, key=lambda p: p.get("price", 0))
+    embedding = most_expensive.get("embedding")
 
-        # Step 2: Perform vector search
-        similar_items: list[RecommendationItem] = await self.vector_search.find_similar_products(embedding)
+    if not embedding:
+        logger.warning("No embedding found in most expensive product: %s", most_expensive)
+        return False
 
-        # Step 3: Build and save the RecommendationGroup
-        recommendation_group = RecommendationGroup(
-            user_id=invoice["userId"],
-            invoice_id=str(invoice_id),
-            created_at=datetime.utcnow(),
-            items=similar_items
-        )
+    # Step 2: Perform vector search
+    similar_items: list[RecommendationItem] = await self.vector_search.find_similar_products(embedding)
 
-        inserted_id = await self.repository.save(recommendation_group)
-        logger.info("Recommendation saved with ID: %s", inserted_id)
+    # Step 3: Build and save the RecommendationGroup
+    recommendation_group = RecommendationGroup(
+        user_id=invoice["userId"],
+        invoice_id=str(invoice_id),
+        created_at=datetime.utcnow(),
+        items=similar_items
+    )
+
+    inserted_id = await self.repository.save(recommendation_group)
+    logger.info("Recommendation saved with ID: %s", inserted_id)
+    return True
+
 # ---
         # Example of the saved document in MongoDB (recommendations collection):
         #
