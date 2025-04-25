@@ -35,7 +35,7 @@ class GenerateRecommendation:
         logger.info("Generating recommendation for invoice: %s", invoice_id)
 
         # Step 1: Extract the most expensive product
-        products = invoice.get("products", [])
+        products = invoice.get("items") or invoice.get("products", [])
         if not products:
             logger.warning("Invoice has no products, skipping.")
             return
