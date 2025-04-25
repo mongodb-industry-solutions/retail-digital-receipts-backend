@@ -99,11 +99,11 @@ Each microservice has its own README covering setup steps, required dependencies
 > 🔗 To configure the frontend and backend for `order` and `user`, please refer to our previous demo — the starting point for this project: [retail-store-v2](https://github.com/mongodb-industry-solutions/retail-store-v2)
 
 ---
-# 🐳 Getting Started – Run All Microservices Together
+## 🐳 Getting Started – Run All Microservices Together
 
 This project includes multiple microservices managed with Docker Compose and controlled via a Makefile.
 
-## ✅ Prerequisites
+### ✅ Prerequisites
 
 - [Docker](https://www.docker.com/)
 - [Docker Compose](https://docs.docker.com/compose/)
@@ -111,7 +111,7 @@ This project includes multiple microservices managed with Docker Compose and con
 
 > Please refer to the individual `README.md` files inside each service folder for more set up details.
 
-## 🚀 How to Run All Services
+### 🚀 How to Run All Services
 
 1. **Clone the repository:**
 
@@ -132,7 +132,7 @@ This project includes multiple microservices managed with Docker Compose and con
     make logs
     ```
 
-## 🛑 How to Stop Everything
+### 🛑 How to Stop Everything
 
 ```bash
 make clean
@@ -140,7 +140,7 @@ make clean
 
 ---
 
-## 💡 By storing your **invoice data in MongoDB**, you unlock a host of benefits:
+# 💡 By storing your **invoice data in MongoDB**, you unlock a host of benefits:
 
 - 🔐 **Security & Data Privacy**  
   MongoDB Atlas offers field-level encryption, role-based access control (RBAC), auditing, and network isolation, making it ideal for handling sensitive billing and customer data.
