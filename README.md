@@ -156,7 +156,7 @@ make clean
 
 ---
 
-## 👥 Authors
+# 👥 Authors
 
 This project was made possible through a close collaboration between domain experts and technical implementers:
 
@@ -172,7 +172,7 @@ This project was made possible through a close collaboration between domain expe
 
 ---
 
-## 📚 Related Blogs *(Coming Soon)*
+# 📚 Related Blogs *(Coming Soon)*
 
 - **Blog 1** – *Coming soon...*
 - **Blog 2** – *Coming soon...*
