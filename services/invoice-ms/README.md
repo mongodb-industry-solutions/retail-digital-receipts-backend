@@ -103,11 +103,11 @@ This grants your service write access to the container so it can upload invoices
 ## 🛠  Project setup:
 
 - Clone the repo and navigate to `services/invoice-ms`
-- Create a `.env.local` file based on `.env.EXAMPLE`
+- Create a `.env` file based on `.env.EXAMPLE`
 ```bash
-cp .env.EXAMPLE .env.local
+cp .env.EXAMPLE .env
 ```
-Make sure to update the variables in .env.local with your own MongoDB URI, Azure credentials, and function URL before running the service.
+Make sure to update the variables in .env with your own MongoDB URI, Azure credentials, and function URL before running the service.
 - Install dependencies
 ```bash
 

@@ -69,11 +69,11 @@ Before running this service, make sure you have:
 ## 🛠  Project setup:
 
 - Clone the repo and navigate to `services/recommendation-ms`
-- Create a `.env.local` file based on `.env.EXAMPLE`
+- Create a `.env` file based on `.env.EXAMPLE`
 ```bash
-cp .env.EXAMPLE .env.local
+cp .env.EXAMPLE .env
 ```
-Make sure to update the variables in `.env.local` with your own MongoDB URI and vector search settings — such as the name of the embedding field and the vector index used in the `products` collection.
+Make sure to update the variables in `.env` with your own MongoDB URI and vector search settings — such as the name of the embedding field and the vector index used in the `products` collection.
 - Install dependencies
 ```bash
 
