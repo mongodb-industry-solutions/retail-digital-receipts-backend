@@ -99,7 +99,7 @@ Each microservice has its own README covering setup steps, required dependencies
 > 🔗 To configure the frontend and backend for `order` and `user`, please refer to our previous demo — the starting point for this project: [retail-store-v2](https://github.com/mongodb-industry-solutions/retail-store-v2)
 
 ---
-# 🧾 Getting Started – Run All Microservices Together
+# 🐳 Getting Started – Run All Microservices Together
 
 This project includes multiple microservices managed with Docker Compose and controlled via a Makefile.
 
