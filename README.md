@@ -89,59 +89,54 @@ Makefile
 > Read the [ADR documentation](docs/adr/) (Architecture Decision Records) to explore the reasoning behind key architectural and modeling decisions._
 ---
 
-## 📎 Go to Related Components for Setup Instructions and Microservice Details
+## 📎 Related Components & Microservice Docs
 
-- 📄 [`services/invoice-ms/README.md`](services/invoice-ms/README.md)  
-- 📄 [`services/recommendation-ms/README.md`](services/recommendation-ms/README.md)  
-- 📄 [`external/README.md`](external/README.md)  
+Each microservice has its own README covering setup steps, required dependencies, external integrations, and how to run it independently.
 
-🔗 To configure the frontend and backend for `order` and `user`, please refer to our previous demo — the starting point for this project: [retail-store-v2](https://github.com/mongodb-industry-solutions/retail-store-v2)
+- 📄 [`invoice-ms`](services/invoice-ms/README.md)
+- 📄 [`recommendation-ms`](services/recommendation-ms/README.md)
 
-🚀 Running the Microservices
-Once your .env files are correctly placed in:
+> 🔗 To configure the frontend and backend for `order` and `user`, please refer to our previous demo — the starting point for this project: [retail-store-v2](https://github.com/mongodb-industry-solutions/retail-store-v2)
 
-services/invoice-ms/.env
+---
+# 🧾 Getting Started – Run All Microservices Together
 
-services/recommendation-ms/.env
+This project includes multiple microservices managed with Docker Compose and controlled via a Makefile.
 
-You're ready to go! Here's how to use the provided Makefile:
+## ✅ Prerequisites
 
-🔧 1. Build and Start Everything
-bash
+- [Docker](https://www.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose/)
+- [GNU Make](https://www.gnu.org/software/make/) (default on macOS/Linux)
 
-make build
-Builds Docker images for both invoice-ms and recommendation-ms
+> Please refer to the individual `README.md` files inside each service folder for more set up details.
 
-Starts the containers in detached mode (-d)
+## 🚀 How to Run All Services
 
-Automatically installs dependencies using Poetry (defined in Dockerfile)
+1. **Clone the repository:**
 
-▶️ 2. Start Services (after a stop)
-bash
+    ```bash
+    git clone https://github.com/your-org/retail-digital-receipts-backend.git
+    cd retail-digital-receipts-backend
+    ```
 
-make start
-Starts already-built containers without rebuilding.
+2. **Build and start all services:**
 
-⏹ 3. Stop Services (without removing)
-bash
+    ```bash
+    make build
+    ```
 
-make stop
-Stops the containers but keeps volumes and networks.
+3. **(Optional) View logs:**
 
-🧹 4. Clean Everything (use with caution!)
-bash
+    ```bash
+    make logs
+    ```
 
+## 🛑 How to Stop Everything
+
+```bash
 make clean
-Stops all containers
-
-Removes containers, networks, volumes, and built images
-
-🐍 5. (Optional) Install dependencies locally
-bash
-
-make poetry_install_invoice
-make poetry_install_recommendation
-Installs dependencies using Poetry for each microservice if you're working outside Docker.
+```
 
 ---
 

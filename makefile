@@ -1,21 +1,19 @@
-# Root Makefile
-.PHONY: build start stop clean
+.PHONY: build clean logs restart
 
+# Start and build all services
 build:
-	docker-compose up --build -d
+	docker-compose up -d --build
 
-start:
-	docker-compose start
-
-stop:
-	docker-compose stop
-
+# Stop and remove everything: containers, volumes, and orphans
 clean:
-	docker-compose down --rmi all -v
+	docker-compose down --volumes --remove-orphans
+	docker system prune -f
 
-# Optional: Run poetry install for invoice-ms manually
-poetry_install_invoice:
-	cd services/invoice-ms && poetry install
+# Show live logs
+logs:
+	docker-compose logs -f --tail=50
 
-poetry_install_recommendation:
-	cd services/recommendation-ms && poetry install
+# Rebuild and restart everything
+restart:
+	make clean
+	make build

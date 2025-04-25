@@ -1,35 +1,33 @@
-# Base image
-FROM python:3.10-slim-buster
+# Use a lightweight Python 3.10 image
+FROM python:3.10-slim
 
-# Avoid interactive prompts
-ENV DEBIAN_FRONTEND=noninteractive \
-    GET_POETRY_IGNORE_DEPRECATION=1
+# Install system dependencies required by WeasyPrint and other libraries
+RUN apt-get update && apt-get install -y \
+    build-essential \      
+    libpango-1.0-0 \
+    libpangoft2-1.0-0 \
+    libffi-dev \
+    libcairo2 \
+    libpq-dev \
+    curl && \
+    apt-get clean
 
+# Set the working directory inside the container
 WORKDIR /app
 
-# Install system dependencies for PDF rendering
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libpango-1.0-0 \
-    libcairo2 \
-    libgdk-pixbuf2.0-0 \
-    libffi-dev \
-    curl \
-    git \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
+# Copy dependency definitions
+COPY pyproject.toml poetry.lock* ./
 
-# Copy Poetry files and install dependencies
-COPY pyproject.toml poetry.lock /app/
-RUN pip install poetry==1.8.4 \
-  && poetry config virtualenvs.in-project true \
-  && poetry install --no-interaction --no-root
+# Install Poetry and configure it to avoid virtual environments
+RUN pip install poetry && \
+    poetry config virtualenvs.create false && \
+    poetry install --no-root --only main
 
-# Copy application code
-COPY . /app
+# Copy the application source code into the container
+COPY . .
 
-# Expose FastAPI port
+# Expose port 8000 (used by Uvicorn)
 EXPOSE 8000
 
-# Start the app
+# Start the app using Uvicorn via Poetry
 CMD ["poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -1,19 +1,28 @@
-# Base image
-FROM python:3.10-slim-buster
+# Use a lightweight Python 3.10 image
+FROM python:3.10-slim
 
-ENV DEBIAN_FRONTEND=noninteractive \
-    GET_POETRY_IGNORE_DEPRECATION=1
+# Install base system dependencies (adjust if needed)
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    && apt-get clean
 
+# Set working directory inside the container
 WORKDIR /app
 
-# Install Poetry & dependencies
-COPY pyproject.toml poetry.lock /app/
-RUN pip install poetry==1.8.4 \
-  && poetry config virtualenvs.in-project true \
-  && poetry install --no-interaction --no-root
+# Copy dependency definitions
+COPY pyproject.toml poetry.lock* ./
 
-# Copy service code
-COPY . /app
+# Install Poetry and configure it to avoid virtual environments
+RUN pip install poetry && \
+    poetry config virtualenvs.create false && \
+    poetry install --no-root --only main
 
-# Start the worker
+# Copy the full application code
+COPY . .
+
+# Set Python path so 'app.' modules are correctly resolved
+ENV PYTHONPATH=/app
+
+# Run the main background processor
 CMD ["poetry", "run", "python", "main.py"]

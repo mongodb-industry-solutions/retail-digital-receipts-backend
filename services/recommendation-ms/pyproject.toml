@@ -4,16 +4,25 @@ version = "0.1.0"
 description = "Recommendation Microservice for generating personalized suggestions based on purchases"
 authors = ["Florencia Arin <florencia.arin@mongodb.com>"]
 readme = "README.md"
+
+# Include the app/ folder as the main package
 packages = [{ include = "app" }]
 
 [tool.poetry.dependencies]
+# Python version compatibility
 python = ">=3.10,<3.11"
-pymongo = "^4.10.1"
-motor = "^3.7.0"  # Async MongoDB client
-python-dotenv = "^1.0.1"  # Load environment variables from .env files
-pydantic = ">=2.7,<3.0"  # Data validation
-pydantic-settings = "^2.8.1"  # Environment-based config management
-httpx = "^0.28.1"  # Async HTTP client
+
+# MongoDB drivers
+pymongo = "^4.10.1"               # Sync MongoDB client (used by some libraries)
+motor = "^3.7.0"                  # Async MongoDB client
+
+# Environment and settings management
+python-dotenv = "^1.0.1"          # Loads variables from .env
+pydantic = ">=2.7,<3.0"           # Data validation and parsing
+pydantic-settings = "^2.8.1"      # Pydantic-based environment config
+
+# HTTP client for calling external APIs (if needed)
+httpx = "^0.28.1"                 # Async HTTP requests
 
 [build-system]
 requires = ["poetry-core"]
