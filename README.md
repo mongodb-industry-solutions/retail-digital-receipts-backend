@@ -126,17 +126,16 @@ This project includes multiple microservices managed with Docker Compose and con
     make build
     ```
 
-3. **(Optional) View logs:**
+3. **View logs:**
 
     ```bash
     make logs
     ```
 
-### 🛑 How to Stop Everything
-
-```bash
-make clean
-```
+4. **How to Stop Everything**
+    ```bash
+    make clean
+    ```
 
 ---
 
