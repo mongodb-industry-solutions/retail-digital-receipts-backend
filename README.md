@@ -115,7 +115,7 @@ This project includes multiple microservices managed with Docker Compose and con
 1. **Clone the repository:**
 
     ```bash
-    git clone https://github.com/your-org/retail-digital-receipts-backend.git
+    git clone https://github.com/mongodb-industry-solutions/retail-digital-receipts-backend.git
     cd retail-digital-receipts-backend
     ```
 
