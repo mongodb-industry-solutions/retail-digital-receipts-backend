@@ -17,6 +17,7 @@ this trigger runs automatically. It reads the full payload (`fullDocument`) and 
 ---
 
 ## Trigger Setup
+->https://www.mongodb.com/docs/atlas/atlas-ui/triggers/
 
 | Setting        | Value                            |
 |----------------|----------------------------------|

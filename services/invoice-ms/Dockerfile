@@ -1,45 +1,33 @@
-# Use the official Python image (version 3.10-slim) as the base image
-FROM python:3.10-slim-buster
+# Use a lightweight Python 3.10 image
+FROM python:3.10-slim
 
-# Set environment variable to avoid interactive prompts during build
-ENV DEBIAN_FRONTEND=noninteractive
-ENV GET_POETRY_IGNORE_DEPRECATION=1
+# Install system dependencies required by WeasyPrint and other libraries
+RUN apt-get update && apt-get install -y \
+    build-essential \      
+    libpango-1.0-0 \
+    libpangoft2-1.0-0 \
+    libffi-dev \
+    libcairo2 \
+    libpq-dev \
+    curl && \
+    apt-get clean
 
-# Set working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# 👉 Install system dependencies required for WeasyPrint
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libpango-1.0-0 \
-    libcairo2 \
-    libgdk-pixbuf2.0-0 \
-    libffi-dev \
-    curl \
-    git \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# Copy dependency definitions
+COPY pyproject.toml poetry.lock* ./
 
-# Step 1: Copy Poetry files first to install dependencies separately
-COPY invoice-ms/pyproject.toml invoice-ms/poetry.lock /app/
+# Install Poetry and configure it to avoid virtual environments
+RUN pip install poetry && \
+    poetry config virtualenvs.create false && \
+    poetry install --no-root --only main
 
-# Step 2: Install Poetry
-RUN pip install poetry==1.8.4
+# Copy the application source code into the container
+COPY . .
 
-# Step 3: Configure Poetry to install in the project directory
-RUN poetry config virtualenvs.in-project true
-
-# Step 4: Install project dependencies
-RUN poetry install --no-interaction --no-root
-
-# Step 5: Copy application code
-COPY ./invoice-ms /app/
-
-# Step 6: Copy environment variables
-COPY invoice-ms/.env.local /app/.env.local
-
-# Step 7: Expose port for FastAPI
+# Expose port 8000 (used by Uvicorn)
 EXPOSE 8000
 
-# Step 8: Run FastAPI app with Uvicorn
+# Start the app using Uvicorn via Poetry
 CMD ["poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

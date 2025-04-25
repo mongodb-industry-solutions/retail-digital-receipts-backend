@@ -68,6 +68,8 @@ async def main():
     )
 
     logger.info("Launching background tasks: MongoDB listener and EventProcessor.")
+    logger.info("Recommendation Microservice is up and running. Listening for new invoices…")
+
 
     # Run both listener and processor concurrently
     await asyncio.gather(
@@ -76,5 +78,8 @@ async def main():
     )
 
 if __name__ == "__main__":
-    # Entry point of the microservice
-    asyncio.run(main())
+    try:
+        # Entry point of the microservice
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        logger.info("Shutdown signal received. Stopping Recommendation Microservice.")

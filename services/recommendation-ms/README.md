@@ -89,7 +89,7 @@ Run the following:
 
 ```bash
 # Start the applciation
-poetry run python app/main.py 
+poetry run python main.py
 ```
 ## 🐳 Run with Docker
 
@@ -100,22 +100,27 @@ You can run `invoice-ms` in an isolated container using Docker.
 ```bash
 docker build -t recommendation-ms .
 ```
+This command:
 
-This will:
+- Uses the Dockerfile in the current directory (.) to build a Docker image.
+- Installs all dependencies via Poetry.
+- Tags the image as recommendation-ms, so you can reference it later.
+- Packages your app code, including the .env file at runtime (though not embedded in the image).
+- Result: You now have a Docker image locally called recommendation-ms that can run your microservice.
 
-Use the official Python 3.10 slim image
-
-Install dependencies via Poetry
-
-Expose port 8000
-
-Run the container
+▶️ Run the container
 
 ```bash
-docker run --env-file .env.local -p 8000:8000 invoice-ms
+docker run --env-file .env recommendation-ms
 ```
-Your service should now be available at:
-http://localhost:8000
+This command:
+
+- Loads environment variables from your local .env file.
+- Starts a new container from the recommendation-ms image.
+- Executes poetry run python main.py inside the container (defined in CMD).
+- Starts your background listener for MongoDB Change Streams.
+- Does not expose any ports (because this microservice doesn’t offer an HTTP API).
+- Outputs logs to your terminal so you can see what it’s doing.
 
 ---
 

@@ -135,22 +135,26 @@ You can run `invoice-ms` in an isolated container using Docker.
 docker build -t invoice-ms .
 ```
 
-This will:
+This command:
 
-Use the official Python 3.10 slim image
-
-Install dependencies via Poetry
-
-Set up FastAPI and your app code
-
-Expose port 8000
+- Uses the Dockerfile in the current directory (.) to build a Docker image.
+- Installs all system dependencies (e.g., for PDF rendering with WeasyPrint).
+- Uses Poetry to install your Python dependencies (as defined in pyproject.toml).
+- Copies your application code into the image.
+- Tags the image as invoice-ms so you can run it later by that name.
+- The final result is a self-contained image that runs the invoice microservice with all its dependencies.
 
 ### ▶️ 2. Run the container
 
 ```bash
-docker run --env-file .env.local -p 8000:8000 invoice-ms
+docker run --env-file .env -p 8000:8000 invoice-ms
 ```
-Your service should now be available at:
-http://localhost:8000
+This command:
+
+- Loads environment variables from your local .env file (used by Pydantic settings).
+- Starts the container using the invoice-ms image you built earlier.
+- Maps port 8000 of the container to port 8000 on your host machine — this is important because the service runs a FastAPI app via Uvicorn, which listens on port 8000.
+- Makes the HTTP API available at http://localhost:8000
+- Starts background tasks such as the MongoDB Change Stream listener and invoice generation logic.
 
 ---

@@ -82,20 +82,59 @@ docs/
   └── adr/
 
 docker-compose.yml
-.env.example
 Makefile
 ```
 > 📝 _Note: Curious about how and why this system was designed?  
 > Read the [ADR documentation](docs/adr/) (Architecture Decision Records) to explore the reasoning behind key architectural and modeling decisions._
 ---
 
-## 📎 Go to Related Components for Setup Instructions and Microservice Details
+## 📎 Related Components & Microservice Docs
 
-- 📄 [`services/invoice-ms/README.md`](services/invoice-ms/README.md)  
-- 📄 [`services/recommendation-ms/README.md`](services/recommendation-ms/README.md)  
-- 📄 [`external/README.md`](external/README.md)  
+Each microservice has its own README covering setup steps, required dependencies, external integrations, and how to run it independently.
 
-🔗 To configure the frontend and backend for `order` and `user`, please refer to our previous demo — the starting point for this project: [retail-store-v2](https://github.com/mongodb-industry-solutions/retail-store-v2)
+- 📄 [`invoice-ms`](services/invoice-ms/README.md)
+- 📄 [`recommendation-ms`](services/recommendation-ms/README.md)
+
+> 🔗 To configure the frontend and backend for `order` and `user`, please refer to our previous demo — the starting point for this project: [retail-store-v2](https://github.com/mongodb-industry-solutions/retail-store-v2)
+
+---
+## 🐳 Getting Started – Run All Microservices Together
+
+This project includes multiple microservices managed with Docker Compose and controlled via a Makefile.
+
+### Prerequisites
+
+- [Docker](https://www.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose/)
+- [GNU Make](https://www.gnu.org/software/make/) (default on macOS/Linux)
+
+> Please refer to the individual `README.md` files inside each service folder for more set up details.
+
+### How to Run All Services
+
+1. **Clone the repository:**
+
+    ```bash
+    git clone https://github.com/mongodb-industry-solutions/retail-digital-receipts-backend.git
+    cd retail-digital-receipts-backend
+    ```
+
+2. **Build and start all services:**
+
+    ```bash
+    make build
+    ```
+
+3. **View logs:**
+
+    ```bash
+    make logs
+    ```
+
+4. **How to Stop Everything**
+    ```bash
+    make clean
+    ```
 
 ---
 
