@@ -1,5 +1,7 @@
 # ADR 0010 – Handling External Enrichment in `invoice-ms`
 
+**Date:** April 2025
+
 ## Context
 
 In this demo, `invoice-ms` enriches each invoice by calling an external Azure Function.  

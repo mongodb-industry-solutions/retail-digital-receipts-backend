@@ -1,5 +1,3 @@
-# app/application/workers/event_processor.py
-
 import asyncio
 import logging
 from app.infrastructure.queue.async_queue import EventQueue
@@ -49,8 +47,12 @@ class EventProcessor:
                     else:
                         invoice_id = invoice_data["_id"]
                         logger.info(f"Generating recommendation for invoice ID: {invoice_id}")
-                        await self.generate_recommendation_use_case.execute(invoice_data)
-                        logger.info(f"Recommendation generated successfully for invoice ID: {invoice_id}")
+                        
+                        success = await self.generate_recommendation_use_case.execute(invoice_data)
+                        if success:
+                            logger.info(f"✅ Recommendation generated and saved for invoice ID: {invoice_id}")
+                        else:
+                            logger.warning(f"⚠️ Recommendation skipped for invoice ID: {invoice_id}")
                 except Exception as e:
                     logger.error("Error while processing invoice event: %s", e)
 
