@@ -10,19 +10,20 @@ class InvoiceRenderer:
         # Use the createdAt date or fallback to today's date
         created_at = invoice.get("createdAt", datetime.utcnow().isoformat())[:10]
 
-        # Extract line items from the invoice
+        # Extract line items and ERP-related metadata
         items = invoice.get("items", [])
-
-        # Extract ERP-related metadata
         metadata = invoice.get("metadata", {}).get("erpDetails", {})
 
-        # Limit to 4 product recommendations (optional)
+        # Limit to 4 recommendations
         recommendations = invoice.get("recommendations", [])[:4]
 
-        # Get total amount (from metadata or fallback)
+        # Get totals
         subtotal = metadata.get("subtotal", invoice.get("subtotal", 0))
         tax = metadata.get("totalTax", invoice.get("totalTax", 0))
         total = metadata.get("totalAmount", invoice.get("totalAmount", 0))
+
+        # Get base store URL from environment variables
+        store_url = os.getenv("STORE_URL", "http://localhost:3000/shop")
 
         # Begin HTML content
         html = f"""
@@ -43,6 +44,7 @@ class InvoiceRenderer:
               th, td {{
                 border: 1px solid #ddd;
                 padding: 8px;
+                text-align: left;
               }}
               th {{ background-color: #f2f2f2; }}
               .total {{
@@ -53,47 +55,78 @@ class InvoiceRenderer:
               .recommendations {{
                 margin-top: 40px;
               }}
+              .products-container {{
+                display: flex;
+                justify-content: space-between;
+                margin-top: 20px;
+              }}
               .product {{
-                display: inline-block;
-                width: 22%;
                 text-align: center;
-                margin: 1%;
+                width: 22%;
               }}
               .product img {{
                 width: 100%;
-                max-width: 150px;
+                max-width: 120px;
+                height: 120px;
+                object-fit: contain;
                 border-radius: 6px;
+                margin-bottom: 6px;
               }}
               .product-name {{
                 font-size: 12px;
-                margin-top: 6px;
+                margin-bottom: 2px;
+              }}
+              .product-price {{
+                font-size: 12px;
+                font-weight: bold;
+                color: #555;
+              }}
+              a {{
+                text-decoration: none;
+                color: inherit;
               }}
             </style>
           </head>
           <body>
             <h1>Pop-Up Store</h1>
-            <small>Created in {created_at}</small>
-            <small>Order Id {invoice_id}</small>
+            <small>Created on {created_at}</small><br/>
+            <small>Order ID: {invoice_id}</small>
+
             <h2>Items</h2>
             <table>
               <thead>
                 <tr>
-                  <th>#</th>
                   <th>Product</th>
-                  <th>Price</th>
+                  <th>Details</th>
                 </tr>
               </thead>
               <tbody>
         """
 
-        # Add each item as a table row
-        i = 1
+        # Add each item as a table row with image and name
         for item in items:
             name = item.get("name", "Product")
-            price = item.get("price", {}).get("amount", 0)
             amount = item.get("amount", 1)
-            html += f"<tr><td>{1}</td><td>{name}</td><td>{amount} x ${price:.2f}</td></tr>"
-            i = i+1
+
+            # Extract price safely
+            price = item.get("price", 0)
+            if isinstance(price, dict):
+                price = price.get("amount", 0)
+
+            # Extract image URL safely
+            image_url = item.get("image", "https://via.placeholder.com/50")
+            if isinstance(image_url, dict):
+                image_url = image_url.get("url", "https://via.placeholder.com/50")
+
+            html += f"""
+            <tr>
+              <td>
+                <img src="{image_url}" alt="{name}" style="width: 50px; height: 50px; object-fit: contain; vertical-align: middle; margin-right: 10px;">
+                {name}
+              </td>
+              <td>{amount} x ${price:.2f}</td>
+            </tr>
+            """
 
         # Add total and ERP metadata
         html += f"""
@@ -102,51 +135,44 @@ class InvoiceRenderer:
 
             <p class="total">Subtotal: ${subtotal:.2f}</p>
             <p class="total">Tax: ${tax:.2f}</p>
-            <p class="total">Total: ${total:.2f}</p>            
+            <p class="total">Total: ${total:.2f}</p>
         """
 
-        # Add recommended products only if present
-        html +=  f"""<div class='products-container'>
-              <p class="ms-0">Based on this order you might also like</p>
-              <div class='recommendations-list mt-3'>"""
-        for rec in recommendations:
-            name = rec.get("name", "")
-            brand = rec.get("brand", "")
-            image_url = rec.get("image", "https://via.placeholder.com/150")
-            vectorSearchScore = rec.get("vectorSearchScore", "")
-
-            html += f"""
-              <div class="product">
-                <img src="{image_url}" alt="{name}" />
-                <div class="product-name">{name}</div>
-              </div>
-
-                      <div class='PRCard cursorPointer' >
-            <div class='d-flex flex-column'>
-                <div class='scoreContainer'>
-]                        <div class='scorebadge' variant="yellow">
-                            {vectorSearchScore}
-                        </div>
-                </div>
-                <div class='imageContainer'>
-                     <img
-                            src={image_url}
-                            alt={name}
-                            fill
-                            quality={50}
-                            unoptimized
-                            style={{ objectFit: "contain" }}
-                        />
-                </div>
-                <div class='ms-3 me-3 mt-3'>
-                    <p class="name" title={name}>{name}</p>
-                    <p class="brand" title={brand}>{brand}</p>
-                </div>
-            </div>
-        </div>
+        # Add recommendations if available
+        if recommendations:
+            html += """
+            <div class="recommendations">
+              <h2>Based on this order you might also like</h2>
+              <div class="products-container">
             """
-        html += """ </div>
-          </div>"""
+
+            for rec in recommendations:
+                name = rec.get("name", "Unnamed Product")
+
+                # Extract price safely
+                price = rec.get("price", 0)
+                if isinstance(price, dict):
+                    price = price.get("amount", "N/A")
+
+                # Extract image safely
+                image_url = rec.get("image", "https://via.placeholder.com/150")
+                if isinstance(image_url, dict):
+                    image_url = image_url.get("url", "https://via.placeholder.com/150")
+
+                html += f"""
+                <div class="product">
+                  <a href="{store_url}" target="_blank">
+                    <img src="{image_url}" alt="{name}" />
+                    <div class="product-name">{name}</div>
+                    <div class="product-price">${price}</div>
+                  </a>
+                </div>
+                """
+
+            html += """
+              </div>
+            </div>
+            """
 
         # Final HTML closing
         html += """
@@ -154,9 +180,8 @@ class InvoiceRenderer:
         </html>
         """
 
-        # Generate PDF file in /tmp directory
+        # Generate PDF
         file_path = f"/tmp/invoice_{invoice_id}.pdf"
         HTML(string=html).write_pdf(file_path)
 
-        # Return the file path for further processing (e.g., upload to blob)
         return file_path

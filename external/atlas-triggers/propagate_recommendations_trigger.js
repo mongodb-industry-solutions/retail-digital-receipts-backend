@@ -1,31 +1,64 @@
+// MongoDB Atlas Trigger: Normalize and propagate recommendations
+// Triggered on insert into `recommendations` collection
+
 exports = async function(changeEvent) {
-  // The full document inserted into the `recommendations` collection
   const recDoc = changeEvent.fullDocument;
   if (!recDoc) {
-    console.log("No fullDocument — skipping trigger");
+    console.log(" No fullDocument — skipping");
     return;
   }
 
-  // Extract the user ID and ensure we have an array of recommendation items
+  // Extract fields from inserted recommendation document
   const userId = recDoc.userId;
-  const itemsArray = Array.isArray(recDoc.items)
-    ? recDoc.items
-    : (recDoc.items ? [recDoc.items] : []);
+  const invoiceId = recDoc.invoiceId;
+  let itemsArray = Array.isArray(recDoc.items) ? recDoc.items : [];
 
-  // Get a handle to the Atlas service and the target database
-  const mongodb = context.services.get("IST-Shared");
-  const db = mongodb.db("leafy_popup_store");
+  if (!userId || !invoiceId || itemsArray.length === 0) {
+    console.log(" Missing required fields — skipping");
+    return;
+  }
 
-  // 1) Update the user's document: set `lastRecommendations` to the array of items
-  await db.collection("users").updateOne(
-    { _id: userId },                            // Match by user ObjectId
-    { $set: { lastRecommendations: itemsArray } }, // Overwrite with latest recommendations
-    { upsert: true }                             // Create user doc if it doesn't exist
-  );
+  // Access MongoDB Atlas service and target database
+  const mongodb = context.services.get("<YOUR-CLUSTER-NAME>");  // e.g., "Cluster0"
+  const db = mongodb.db("<YOUR-DATABASE-NAME>");                // e.g., "my_app_db"
 
-  // 2) Update the corresponding invoice: store the same items array under `recommendations`
-  await db.collection("invoices").updateOne(
-    { _id: BSON.ObjectId(recDoc.invoiceId) },   // Convert invoiceId string back to ObjectId
-    { $set: { recommendations: itemsArray } }     // Save recommendation items on the invoice
-  );
+  // Ensure ObjectId format for user and invoice
+  function ensureObjectId(id) {
+    if (typeof id === "string") return BSON.ObjectId(id);
+    return id;
+  }
+
+  // Normalize the structure:
+  // Flatten `image` from object to string (URL)
+  // Flatten `price` from object to raw number
+  itemsArray = itemsArray.map(item => {
+    if (typeof item.image === "object" && item.image.url) {
+      item.image = item.image.url;
+    }
+
+    if (typeof item.price === "object" && item.price.amount) {
+      item.price = item.price.amount;
+    }
+
+    return item;
+  });
+
+  try {
+    // Save the latest recommendations in the user document
+    await db.collection("users").updateOne(
+      { _id: ensureObjectId(userId) },
+      { $set: { lastRecommendations: itemsArray } },
+      { upsert: true }
+    );
+
+    // Store the same recommendation set in the invoice document
+    await db.collection("invoices").updateOne(
+      { _id: ensureObjectId(invoiceId) },
+      { $set: { recommendations: itemsArray } }
+    );
+
+    console.log(`✅ Trigger updated user and invoice documents successfully`);
+  } catch (err) {
+    console.error("❌ Trigger failed:", err.message);
+  }
 };
