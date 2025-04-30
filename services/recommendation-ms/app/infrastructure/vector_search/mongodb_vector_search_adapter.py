@@ -82,7 +82,7 @@ class MongoDBVectorSearchAdapter(VectorSearchPort):
     async def find_similar_products(
         self,
         embedding: List[float],
-        limit: int = 4
+        limit: int = 100 #we limit until 100 because we are going to filter them to the most relevant by applying some filter logic
     ) -> List[RecommendationItem]:
         """
         Perform a vector similarity search using a single product embedding.
