@@ -57,21 +57,6 @@ aio = ["aiohttp (>=3.0)"]
 tracing = ["opentelemetry-api (>=1.26,<2.0)"]
 
 [[package]]
-name = "azure-functions"
-version = "1.22.1"
-description = "Azure Functions for Python"
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "azure-functions-1.22.1.tar.gz", hash = "sha256:235bb2a4e83d911a0bf4db3eec8f072ce6a0d2c2662bf8bc6d1bbe9389f10562"},
-    {file = "azure_functions-1.22.1-py3-none-any.whl", hash = "sha256:ae4e68bb734365ae74bb2f55bd04f33b8a3d83c0e079a394a4c26b378f7b5f6a"},
-]
-
-[package.extras]
-dev = ["azure-functions-durable", "coverage", "flake8 (>=4.0.1,<4.1.0)", "flake8-logging-format", "mypy", "pytest", "pytest-cov", "requests (==2.*)"]
-
-[[package]]
 name = "azure-identity"
 version = "1.21.0"
 description = "Microsoft Azure Identity Library for Python"
@@ -1582,4 +1567,4 @@ test = ["pytest"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.11"
-content-hash = "8089b252458c2934078f3f2666163a99b116f693e24fa5ff87310259970c8a79"
+content-hash = "7314417dcc80e7fdebff6cd65b533b7043883204531f89b1a410c92d0b3c1b73"

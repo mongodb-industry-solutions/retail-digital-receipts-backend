@@ -1,21 +1,47 @@
-.PHONY: build clean logs
+.PHONY: build build-invoice build-recommendation clean logs build-prod deploy-prod deploy-invoice-prod deploy-recommendation-prod stop-prod logs-invoice-prod logs-recommendation-prod
 
-# Build and start all services in detached mode
+REGISTRY=retailistregistry-bqfvgkccbfhdhfak.azurecr.io
+
 build:
 	docker-compose up -d --build
 
-# Stop and remove all services, volumes, and orphan containers
 clean:
 	docker-compose down --volumes --remove-orphans
 	docker system prune -f
 
-# Show the last 50 log lines and follow logs in real time
 logs:
 	docker-compose logs -f --tail=50
 
-# Notes:
-# - 'make build' builds the Docker images and starts containers in the background.
-# - 'make logs' displays the latest 50 lines of logs and follows the output live.
-# - 'make clean' stops all running services, removes volumes and orphan containers, and prunes unused Docker resources.
-# - This Makefile is optimized for local development using Azure CLI authentication outside containers.
-# - In production (Azure App Service), authentication is handled via Managed Identity automatically.
+build-invoice:
+	docker-compose build invoice-ms
+
+build-recommendation:
+	docker-compose build recommendation-ms
+
+build-prod:
+	docker build -t $(REGISTRY)/invoice-ms:latest ./services/invoice-ms
+	docker push $(REGISTRY)/invoice-ms:latest
+	docker build -t $(REGISTRY)/recommendation-ms:latest ./services/recommendation-ms
+	docker push $(REGISTRY)/recommendation-ms:latest
+
+deploy-invoice-prod:
+	docker build -t $(REGISTRY)/invoice-ms:latest ./services/invoice-ms
+	docker push $(REGISTRY)/invoice-ms:latest
+
+deploy-recommendation-prod:
+	docker build -t $(REGISTRY)/recommendation-ms:latest ./services/recommendation-ms
+	docker push $(REGISTRY)/recommendation-ms:latest
+
+deploy-prod:
+	make deploy-invoice-prod
+	make deploy-recommendation-prod
+
+stop-prod:
+	az webapp stop --name invoice-ms --resource-group ISTRetail
+	az webapp stop --name recommendation-ms --resource-group ISTRetail
+
+logs-invoice-prod:
+	az webapp log tail --name invoice-ms --resource-group ISTRetail
+
+logs-recommendation-prod:
+	az webapp log tail --name recommendation-ms --resource-group ISTRetail

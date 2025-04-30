@@ -110,31 +110,41 @@ This project includes multiple microservices managed with Docker Compose and con
 
 > Please refer to the individual `README.md` files inside each service folder for more set up details.
 
-### How to Run All Services
+>**Clone the repository:**
+>    ```bash
+ >   git clone https://github.com/mongodb-industry-solutions/retail-digital-receipts-backend.git
+  >  cd retail-digital-receipts-backend
+   > ```
 
-1. **Clone the repository:**
+### 🧪 Local Development Commands
 
-    ```bash
-    git clone https://github.com/mongodb-industry-solutions/retail-digital-receipts-backend.git
-    cd retail-digital-receipts-backend
-    ```
+| Command                         | Description                                                  |
+|----------------------------------|--------------------------------------------------------------|
+| `make build`                    | Build and start all services with Docker Compose.            |
+| `make clean`                    | Stop and remove containers, volumes, and orphans.            |
+| `make logs`                     | Tail logs from all local containers.                         |
+| `make build-invoice`            | Build only the `invoice-ms` service locally.                 |
+| `make build-recommendation`     | Build only the `recommendation-ms` service locally.          |
 
-2. **Build and start all services:**
+---
 
-    ```bash
-    make build
-    ```
+### 🚀 Production Commands
 
-3. **View logs:**
+> These commands use the Azure Container Registry specified in the `REGISTRY` variable.
+> Before running `make build-prod` or `make deploy-prod`, make sure you're authenticated to Azure Container Registry:
+>```bash
+>az acr login --name retailistregistry
+>```
 
-    ```bash
-    make logs
-    ```
-
-4. **How to Stop Everything**
-    ```bash
-    make clean
-    ```
+| Command                              | Description                                                               |
+|--------------------------------------|---------------------------------------------------------------------------|
+| `make build-prod`                   | Build and push both services to the Azure Container Registry.             |
+| `make deploy-invoice-prod`          | Build and push only `invoice-ms` to Azure Container Registry.             |
+| `make deploy-recommendation-prod`   | Build and push only `recommendation-ms` to Azure Container Registry.      |
+| `make deploy-prod`                  | Deploy both services to Azure (build + push for both).                    |
+| `make stop-prod`                    | Stop both Azure App Services (`invoice-ms`, `recommendation-ms`).         |
+| `make logs-invoice-prod`            | Tail logs from the `invoice-ms` Azure App Service.                        |
+| `make logs-recommendation-prod`     | Tail logs from the `recommendation-ms` Azure App Service.                 |
 
 ---
 
