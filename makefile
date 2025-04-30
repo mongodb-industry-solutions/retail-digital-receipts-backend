@@ -1,6 +1,5 @@
 .PHONY: build build-invoice build-recommendation clean logs build-prod deploy-prod deploy-invoice-prod deploy-recommendation-prod stop-prod logs-invoice-prod logs-recommendation-prod
 
-# Replace with your Azure Container Registry
 REGISTRY=retailistregistry-bqfvgkccbfhdhfak.azurecr.io
 
 build:
@@ -41,7 +40,6 @@ stop-prod:
 	az webapp stop --name invoice-ms --resource-group ISTRetail
 	az webapp stop --name recommendation-ms --resource-group ISTRetail
 
-# Tail logs from the Azure App Services
 logs-invoice-prod:
 	az webapp log tail --name invoice-ms --resource-group ISTRetail
 

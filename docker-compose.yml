@@ -1,4 +1,4 @@
-
+## --- docker-compose.yml ---
 services:
   invoice-ms:
     build:
@@ -11,10 +11,9 @@ services:
       - backend-net
     env_file:
       - ./services/invoice-ms/.env
-    #the next line mounts your Azure login session into the container
-    # Only needed for local development with az login, you can comment on production
-    volumes:
-     - $HOME/.azure:/root/.azure
+    # For local Azure CLI auth (only uncomment for dev)
+    # volumes:
+    #   - $HOME/.azure:/root/.azure
 
   recommendation-ms:
     build:
@@ -22,7 +21,7 @@ services:
       dockerfile: Dockerfile
     container_name: recommendation-ms
     ports:
-      - "8001:8000"  # Assuming recommendation-ms listens internally on 8000
+      - "8001:8000"
     networks:
       - backend-net
     env_file:
