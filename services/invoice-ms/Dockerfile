@@ -14,17 +14,17 @@ RUN apt-get update && apt-get install -y \
     lsb-release && \
     apt-get clean
 
-# --- OPTIONAL: Install Azure CLI for local development ---
+# --- OPTIONAL: Install Azure CLI for local development --- uncomment this section for local development!!!
 # This is required for AzureCliCredential to work inside the container during local development
 # Do NOT rely on this in production (use Managed Identity instead)
-RUN curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg && \
-    install -o root -g root -m 644 microsoft.gpg /etc/apt/trusted.gpg.d/ && \
-    echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" \
-        > /etc/apt/sources.list.d/azure-cli.list && \
-    apt-get update && \
-    apt-get install -y azure-cli && \
-    rm -f microsoft.gpg && \
-    apt-get clean
+#RUN curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg && \
+#    install -o root -g root -m 644 microsoft.gpg /etc/apt/trusted.gpg.d/ && \
+#    echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" \
+#        > /etc/apt/sources.list.d/azure-cli.list && \
+#    apt-get update && \
+#    apt-get install -y azure-cli && \
+#    rm -f microsoft.gpg && \
+#    apt-get clean
 # --------------------------------------------------------
 
 # Set the working directory inside the container
