@@ -12,8 +12,8 @@ services:
     env_file:
       - ./services/invoice-ms/.env
     # For local Azure CLI auth (only uncomment for dev)
-    # volumes:
-    #   - $HOME/.azure:/root/.azure
+    volumes:
+      - $HOME/.azure:/root/.azure
 
   recommendation-ms:
     build:
@@ -21,7 +21,7 @@ services:
       dockerfile: Dockerfile
     container_name: recommendation-ms
     ports:
-      - "8001:8000"
+      - "8001:8001"
     networks:
       - backend-net
     env_file:
