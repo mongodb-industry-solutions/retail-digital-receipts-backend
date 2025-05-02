@@ -31,8 +31,13 @@ RUN pip install poetry && \
     poetry config virtualenvs.create false && \
     poetry install --no-root --only main
 
+# Clean up to reduce image size
+RUN apt-get remove --purge -y build-essential libpq-dev && \
+    apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/*  # Remove apt cache
+
 COPY . .
 
-EXPOSE 8000
+EXPOSE 8181
 
-CMD ["poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8181"]

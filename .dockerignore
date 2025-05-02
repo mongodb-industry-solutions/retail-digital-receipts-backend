@@ -1,19 +1,31 @@
-# Git and VCS
-.git
-.gitignore
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
 
-# Environment files
-*.env
+# Virtual environments
+.venv/
+venv/
 
-# Node modules
-node_modules/
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
 
-# Editor and OS files
+# Env files
+.env.local
+.env
+
+# Editor and IDE files
 .vscode/
 .idea/
-.DS_Store
-Thumbs.db
+*.sublime-*
 
-# Service-specific ignores (if needed)
-services/invoice-ms/.env.local
-services/recommendation-ms/.env.local
+# Logs and temporary files
+*.log
+tmp/
+temp/
+
+# Git
+.git
