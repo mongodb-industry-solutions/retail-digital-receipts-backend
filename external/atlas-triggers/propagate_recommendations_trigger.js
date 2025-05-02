@@ -51,10 +51,12 @@ exports = async function(changeEvent) {
       { upsert: true }
     );
 
-    // Store the same recommendation set in the invoice document
+    // Limit the items array to the first 6 elements and store it in the invoice document
+    const limitedItemsArray = itemsArray.slice(0, 6); // Keeps only the first 6 items
+    
     await db.collection("invoices").updateOne(
       { _id: ensureObjectId(invoiceId) },
-      { $set: { recommendations: itemsArray } }
+      { $set: { recommendations: limitedItemsArray } }
     );
 
     console.log(`✅ Trigger updated user and invoice documents successfully`);

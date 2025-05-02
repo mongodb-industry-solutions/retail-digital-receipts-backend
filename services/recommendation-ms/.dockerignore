@@ -15,7 +15,6 @@ dist/
 
 # Env files
 .env.local
-.env
 
 # Editor and IDE files
 .vscode/

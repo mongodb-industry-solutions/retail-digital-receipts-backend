@@ -101,7 +101,7 @@ class GenerateRecommendation:
         logger.info("Vector search returned %d raw items for invoice %s", len(raw_items), invoice_id)
 
         # Step 3.1 – filter to remove duplicates
-        filtered_items = self._filter_similar_items(raw_items, max_items=4)
+        filtered_items = self._filter_similar_items(raw_items, max_items=20)
         logger.info("Filtered recommendation list to %d unique items", len(filtered_items))
 
         # Step 4 – build and save the RecommendationGroup

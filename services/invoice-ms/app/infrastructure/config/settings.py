@@ -1,7 +1,7 @@
 # settings.py ─ global configuration
 
 import logging
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import ValidationError
 
 logging.basicConfig(level=logging.INFO)
@@ -12,19 +12,19 @@ class Settings(BaseSettings):
     # Mandatory values
     mongodb_uri: str
     database_name: str
-
+    store_url: str
     # Azure Blob Storage with Managed Identity
     azure_blob_account_url: str          # https://<account>.blob.core.windows.net/
     azure_blob_container_name: str       # retail-invoices
-
     # Misc
     azure_metadata_endpoint: str
     origins: str                         # CORS
 
-    model_config = {
-        "env_file": ".env",
-        "extra": "forbid",
-    }
+    model_config = SettingsConfigDict(env_file=".env", env_prefix="", case_sensitive=False, extra="ignore")
+    #{
+    #     "env_file": ".env",
+    #     "extra": "forbid",
+    # }
 
 
 try:
