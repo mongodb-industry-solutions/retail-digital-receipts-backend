@@ -56,7 +56,7 @@ exports = async function(changeEvent) {
     
     await db.collection("invoices").updateOne(
       { _id: ensureObjectId(invoiceId) },
-      { $set: { recommendations: itemsArray } }
+      { $set: { recommendations: limitedItemsArray } }
     );
 
     console.log(`✅ Trigger updated user and invoice documents successfully`);
