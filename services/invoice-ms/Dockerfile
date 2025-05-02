@@ -38,6 +38,6 @@ RUN apt-get remove --purge -y build-essential libpq-dev && \
 
 COPY . .
 
-EXPOSE 8181
+EXPOSE 8081
 
-CMD ["poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8181"]
+CMD ["poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8081"]
