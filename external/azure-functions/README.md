@@ -111,3 +111,10 @@ This function is built for [Azure Functions (Python)](https://learn.microsoft.co
 > Requires Python 3.10+
 
 ---
+## License
+
+© 2025 MongoDB. All rights reserved.
+
+This repository is intended solely for demonstration and educational purposes.  
+Commercial use is strictly prohibited without written permission from MongoDB.  
+No support or warranty is provided. Use at your own risk.

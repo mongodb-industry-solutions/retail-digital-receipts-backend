@@ -123,4 +123,10 @@ This command:
 - Outputs logs to your terminal so you can see what it’s doing.
 
 ---
+## License
 
+© 2025 MongoDB. All rights reserved.
+
+This repository is intended solely for demonstration and educational purposes.  
+Commercial use is strictly prohibited without written permission from MongoDB.  
+No support or warranty is provided. Use at your own risk.

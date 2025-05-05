@@ -29,4 +29,10 @@ this trigger runs automatically. It reads the full payload (`fullDocument`) and 
 | Function Name  | `propagateRecommendations`       |
 
 ---
+## License
 
+© 2025 MongoDB. All rights reserved.
+
+This repository is intended solely for demonstration and educational purposes.  
+Commercial use is strictly prohibited without written permission from MongoDB.  
+No support or warranty is provided. Use at your own risk.

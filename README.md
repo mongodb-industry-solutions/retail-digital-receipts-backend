@@ -184,6 +184,14 @@ This project was made possible through a close collaboration between domain expe
 
 - **Blog 1** – *Coming soon...*
 - **Blog 2** – *Coming soon...*
+---
+## License
+
+© 2025 MongoDB. All rights reserved.
+
+This repository is intended solely for demonstration and educational purposes.  
+Commercial use is strictly prohibited without written permission from MongoDB.  
+No support or warranty is provided. Use at your own risk.
 
 
 
