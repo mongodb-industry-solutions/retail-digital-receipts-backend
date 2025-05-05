@@ -28,6 +28,7 @@ import asyncio
 import logging
 import os
 from dotenv import load_dotenv
+from app.infrastructure import health_server
 
 # Queue and background processing
 from app.infrastructure.queue.async_queue import EventQueue
@@ -69,7 +70,10 @@ async def main():
 
     logger.info("Launching background tasks: MongoDB listener and EventProcessor.")
     logger.info("Recommendation Microservice is up and running. Listening for new invoices…")
-
+   
+    # Start minimal HTTP server for environments like Azure App Service.
+    # This keeps the container alive by responding on port 80.
+    health_server.start()
 
     # Run both listener and processor concurrently
     await asyncio.gather(
