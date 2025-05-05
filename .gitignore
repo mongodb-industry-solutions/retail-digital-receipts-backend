@@ -175,3 +175,6 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 .qodo
+
+# macOS Finder metadata file – safe to ignore
+.DS_Store
