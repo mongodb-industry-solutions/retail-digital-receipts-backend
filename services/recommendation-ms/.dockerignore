@@ -1,0 +1,30 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environments
+.venv/
+venv/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Env files
+.env.local
+
+# Editor and IDE files
+.vscode/
+.idea/
+*.sublime-*
+
+# Logs and temporary files
+*.log
+tmp/
+temp/
+
+# Git
+.git

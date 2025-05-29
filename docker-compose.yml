@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  invoice-ms:
+    build:
+      context: ./services/invoice-ms
+      dockerfile: Dockerfile
+    container_name: invoice-ms
+    ports:
+      - "80:80"
+    networks:
+      - backend-net
+    env_file:
+      - ./services/invoice-ms/.env
+    # For local Azure CLI auth (only uncomment for de
+    # volumes:
+    #  - $HOME/.azure:/root/.azure
+
+  recommendation-ms:
+    build:
+      context: ./services/recommendation-ms
+      dockerfile: Dockerfile
+    container_name: recommendation-ms
+    networks:
+      - backend-net
+    env_file:
+      - ./services/recommendation-ms/.env
+
+networks:
+  backend-net:
+    driver: bridge 
