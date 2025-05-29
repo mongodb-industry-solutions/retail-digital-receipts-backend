@@ -144,6 +144,9 @@ This project includes multiple microservices managed with Docker Compose and con
 | `make deploy-invoice-prod`          | Builds, pushes, and deploys only `invoice-ms` to Azure.                   |
 | `make deploy-recommendation-prod`   | Builds, pushes, and deploys only `recommendation-ms` to Azure.            |
 
+> **ℹ️ Note:** After deploying a new image to Azure Container Registry, make sure the corresponding App Service is running.  
+> Go to the Azure Portal → select the App Service → click **Start** if needed.  
+> To check logs, use **Log Stream** in the App Service panel.
 ---
 
 ## 💡 By storing your **invoice data in MongoDB**, you unlock a host of benefits:
