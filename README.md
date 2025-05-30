@@ -129,6 +129,13 @@ This project includes multiple microservices managed with Docker Compose and con
 
 ### 🚀 Production Commands
 
+To run this demo in a real Azure environment, make sure the following services are preconfigured:
+
+| Resource                                  | Description                                                                                                          |
+|-------------------------------------------|----------------------------------------------------------------------------------------------------------------------|
+| Azure Container Registry (ACR)            | Stores your Docker images. You must be authenticated before deploying. [Guide ↗](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-get-started-portal) |
+| Azure App Services (Web App for Containers) | One for each microservice (`invoice-ms`, `recommendation-ms`). Must be configured to pull from ACR. [Guide ↗](https://learn.microsoft.com/en-us/azure/app-service/quickstart-custom-container?tabs=portal) |
+
 > These commands use the Azure Container Registry specified in the `REGISTRY` variable.
 > Before running `make build-prod` or `make deploy-prod`, make sure you're authenticated to Azure Container Registry:
 >```bash
