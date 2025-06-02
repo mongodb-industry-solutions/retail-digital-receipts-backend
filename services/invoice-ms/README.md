@@ -24,17 +24,19 @@ Part of the retail demo system using MongoDB Change Streams, Azure Functions, Az
 
 ### 1. Event-Driven Invoice Creation
 
-![Invoice Creation Flow](../../docs/images/create-invoice-architecture-ecosystem.png)
-
 - Change Stream detects `orders.insert`
 - `invoice-ms` creates and saves invoice
 - Calls Azure Function to enrich data
+- When a new recommendation is created by the [recommendation-ms](../recommendation-ms) and saved, it is injected into the invoice collection via an Atlas Trigger
 
+![Invoice Creation Flow](../../docs/images/create-invoice-architecture-ecosystem.png)
 ### 2. PDF Rendering On-Demand
 
 - Endpoint `/invoices/{invoice_id}/file`
 - If rendered file exists → returns it
 - Else → triggers generation, uploads to Blob Storage, and returns link
+
+![Invoice Creation Flow2](../../docs/images/create-invoice-architecture-ecosystem2.png)
 
 > 📝 _Note: Curious about how and why this system was designed?  
 > Read the [ADR documentation](../../docs/adr/) (Architecture Decision Records) to explore the reasoning behind key architectural and modeling decisions._
