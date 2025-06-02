@@ -117,7 +117,7 @@ poetry install
 ## ▶️ Run the MS (Local, No Docker)
 
 
-3. Run the following:
+Run the following:
 
 ```bash
 # Start the FastAPI server
