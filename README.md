@@ -92,7 +92,7 @@ Each microservice has its own README covering setup steps, required dependencies
 - 📄 [`invoice-ms`](services/invoice-ms/README.md)
 - 📄 [`recommendation-ms`](services/recommendation-ms/README.md)
 
-> 🔗 To configure the frontend and backend for `order` and `user`, please refer to our previous demo — the starting point for this project: [retail-store-v2](https://github.com/mongodb-industry-solutions/retail-store-v2)
+> 🔗 To configure the frontend and backend for `order` and `user`, please refer to our previous demo — the starting point for this project: [Omnichannel Ordering Solution](https://github.com/mongodb-industry-solutions/retail-store-v2/blob/main/resources/omnichannel/README.md)
 
 ---
 ## 🐳 Getting Started – Run All Microservices Together
