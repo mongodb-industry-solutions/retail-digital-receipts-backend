@@ -26,7 +26,7 @@ Every time an invoice is created, `recommendation-ms`:
 
 ## 🧩 Architecture Diagram
 
-![Architecture](../../docs/images/recommendation-ms.png)
+![Architecture](../../docs/images/recommendation-ms-arch-flow.png)
 
 ---
 
@@ -44,6 +44,26 @@ Every time an invoice is created, `recommendation-ms`:
 > 📝 _Note: Curious about how and why this system was designed?  
 > Read the [ADR documentation](../../docs/adr/) (Architecture Decision Records) to explore the reasoning behind key architectural and modeling decisions._
 
+---
+## 🧬 How Vector Search Works
+
+In this demo, the `products` collection stores both traditional attributes — like name, price, and category — and **AI-generated vector embeddings** that capture the *semantic meaning* of each product.
+
+These embeddings are generated using [Voyage AI](https://www.voyageai.com/) and stored in a dedicated field (e.g., `vai_text_embedding`). MongoDB Atlas Vector Search then uses these embeddings to perform similarity queries.
+
+This is how real-time recommendations happen:
+
+1. After a new invoice is inserted, we extract the most expensive product.
+2. We retrieve its vector embedding.
+3. We run a **$vectorSearch** query against the `products` collection.
+4. MongoDB returns the most semantically similar items — based not just on keywords or categories, but on meaning.
+5. These items are saved as a `RecommendationGroup` for the user and invoice.
+
+This design lets us combine the flexibility of MongoDB documents with the power of modern AI — all inside the same database.
+
+![Vector Search Flow](../../docs/images/vector-search.png)
+
+> 👉 [ADR 0009 – Why Product Vector Search Lives in recommendation-ms](../../docs/adr/0009-product-vector-search-in-recommendation.md)
 ---
 
 ## 📦 Setup Instructions
