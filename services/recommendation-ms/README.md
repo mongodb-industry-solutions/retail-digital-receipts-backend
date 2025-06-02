@@ -60,9 +60,10 @@ This is how real-time recommendations happen:
 5. These items are saved as a `RecommendationGroup` for the user and invoice.
 
 This design lets us combine the flexibility of MongoDB documents with the power of modern AI — all inside the same database.
-
-![VProducts Collection with Embeddings](../../docs/images/products-collectio-with-embeddings.png)
-![Vector Search on Products Collection](../../docs/images/vector-search.png)
+> 📌 _Image: Products Collection with Embeddings
+![Products Collection with Embeddings](../../docs/images/products-collectio-with-embeddings.png)
+> 📌 _Image: Vector Search on Products Collection
+[Vector Search on Products Collection](../../docs/images/vector-search.png)
 
 > 👉 [ADR 0009 – Why Product Vector Search Lives in recommendation-ms](../../docs/adr/0009-product-vector-search-in-recommendation.md)
 ---
