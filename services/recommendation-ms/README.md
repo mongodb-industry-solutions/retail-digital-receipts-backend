@@ -62,8 +62,9 @@ This is how real-time recommendations happen:
 This design lets us combine the flexibility of MongoDB documents with the power of modern AI — all inside the same database.
 > 📌 _Image: Products Collection with Embeddings
 ![Products Collection with Embeddings](../../docs/images/products-collectio-with-embeddings.png)
+
 > 📌 _Image: Vector Search on Products Collection
-[Vector Search on Products Collection](../../docs/images/vector-search.png)
+![Vector Search on Products Collection](../../docs/images/vector-search.png)
 
 > 👉 [ADR 0009 – Why Product Vector Search Lives in recommendation-ms](../../docs/adr/0009-product-vector-search-in-recommendation.md)
 ---
