@@ -188,11 +188,12 @@ This project was made possible through a close collaboration between domain expe
 
 ---
 
-## 📚 Related Demo Content Package *(Coming Soon)*
+## 📚 Related Demo Content Package
 
-- **Solution Library** – *Coming soon...*
-- **Youtube Video** – *Coming soon...*
- - **Blog** – *Coming soon...*
+- [**Youtube Video**](https://youtu.be/42M-ftLc-F8?si=03Ui39lhPkGWeBo4) – Short video showcasing this retail use case and a demo to inspire real-world adoption.
+- [**Solution Library**](https://www.mongodb.com/docs/atlas/architecture/current/solutions-library/real-time-insights-from-receipts/) –  A guide to implementing this solution with MongoDB Atlas.
+- [**Blog**](https://www.mongodb.com/company/blog/innovation/digital-receipts-mining-customer-business-insight-mongodb?utm_source=LINKEDIN&utm_medium=ORGANIC_SOCIAL_ADVOCACY) – Discover business value in retail with this use case.
+
 ---
 ## License
 
