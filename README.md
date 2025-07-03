@@ -195,6 +195,10 @@ This project was made possible through a close collaboration between domain expe
 - [**Blog**](https://www.mongodb.com/company/blog/innovation/digital-receipts-mining-customer-business-insight-mongodb?utm_source=LINKEDIN&utm_medium=ORGANIC_SOCIAL_ADVOCACY) – Discover business value in retail with this use case.
 
 ---
+
+⭐ If this repo added value to your learning or inspired your projects, giving it a star helps us share this work with more people and continue building impactful solutions.
+
+---
 ## License
 
 © 2025 MongoDB. All rights reserved.

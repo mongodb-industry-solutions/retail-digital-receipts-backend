@@ -145,6 +145,11 @@ This command:
 - Exposes port 80 only for a minimal health check endpoint (used to keep the container alive in environments like Azure App Service). No public API is exposed.
 
 ---
+
+⭐ If this repo added value to your learning or inspired your projects, giving it a star helps us share this work with more people and continue building impactful solutions.
+
+---
+
 ## License
 
 © 2025 MongoDB. All rights reserved.

@@ -158,6 +158,11 @@ This command:
 - Starts background tasks such as the MongoDB Change Stream listener and invoice generation logic.
 
 ---
+
+⭐ If this repo added value to your learning or inspired your projects, giving it a star helps us share this work with more people and continue building impactful solutions.
+
+---
+
 ## License
 
 © 2025 MongoDB. All rights reserved.
