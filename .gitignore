@@ -178,3 +178,11 @@ cython_debug/
 
 # macOS Finder metadata file – safe to ignore
 .DS_Store
+
+# Security
+security_check.sh
+.env
+*.env.local
+*.pem
+*.key
+
