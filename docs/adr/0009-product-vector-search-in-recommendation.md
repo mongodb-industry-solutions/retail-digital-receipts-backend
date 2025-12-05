@@ -1,60 +1,128 @@
+ ADR 0009 – Why Recommendation-MS Performs Vector Search Directly on the ODL Product Catalog
 
-# ADR 0009 – Why Product Vector Search Lives in recommendation-ms (for now)
+**Date:** April 2025 *(Updated December 2025)*  
+**Status:** Accepted
 
-**Date:** April 2025
+## Context
 
----
+In classic microservice architecture guidance, the rule of thumb is:
 
-## What we know for sure
+> Each service owns its data.  
+> Other services must consume that data through APIs, not by querying its database.
 
-We're going to use vector search on the `products` collection — that’s not going to change any time soon.
+Initially, we assumed this rule applied strictly here — that `recommendation-ms` should access product data only through a future `product-ms`.
 
-Right now, `recommendation-ms` needs to access that data to generate suggestions.  
-There’s no `product-ms` exposing embeddings as an API yet.
+However, after revisiting our assumptions, analyzing trade-offs using *Software Architecture: The Hard Parts*, and considering both modern MongoDB capabilities and the Operational Data Layer (ODL) pattern, we realized that this assumption does not fully apply in our design.
 
-So doing the vector search **directly from here** is practical, legit, and unproblematic.
+Our system does not have private, per-service databases. Instead:
 
----
+> Upstream systems feed MongoDB Atlas, which acts as an **Operational Data Layer** — a governed, shared **Product Data Domain** used by multiple consumers.
 
-## But also...
+`recommendation-ms` is **not** reading someone else’s private store.  
+It is consuming a **shared, contract-driven domain model**.
 
-If one day we do introduce a `product-ms`, it would make sense to move this search there — to respect clear data ownership boundaries.
+## Forces and Trade-offs
 
-Still, recommendation logic will likely grow in this service anyway, with:
-- More complex business rules
-- Custom ML models
-- User-aware and context-based ranking
+| Force | Preference | Consequence |
+|-------|-----------|-------------|
+| Service autonomy | Separate data ownership | Hard to unify data across services |
+| Real-time personalization | Single low-latency view | API chaining becomes expensive |
+| Microservice decoupling | API contracts | Heavy orchestration for AI/search |
+| Modern MongoDB capabilities | Single operational platform | Classic guidance needs rethinking |
 
-So it’s natural for `recommendation-ms` to evolve as the **brain of product suggestions**.
+Classic approaches assumed no database could support diverse workloads.  
+MongoDB now provides:
 
----
+- Flexible document model
+- Vector, full-text, and hybrid search
+- Workload isolation
+- Change Streams and event-driven sync
 
-## Design-wise, this makes sense
+Those capabilities enable a shared, governed ODL without reintroducing a shared DB anti-pattern.
 
-Yes, this microservice reads from the product catalog.  
-But the decision about *what to recommend and why* clearly belongs here.
+## ODL vs. Shared Database
 
-As we said:
+A shared database is:
 
-> “This could be migrated later — but the value lives here.”
+❌ multiple services writing to the same tables  
+❌ schema coupling  
+❌ accidental dependencies
 
-That’s exactly why we’re using a **Port**:  
-If tomorrow the way we fetch similar products changes (say, via HTTP to `product-ms`), the business logic stays intact.  
-Only the adapter changes.
+An **Operational Data Layer** is:
 
----
+✔️ a **read-optimized**, governed Product Data Domain  
+✔️ fed by upstream systems (ERP, Order Service, etc.)  
+✔️ exposes **contracted data views**, not internal schemas  
+✔️ enables multiple consumers without API chaining
 
-## A quick note on Ports & Adapters
+In the ODL:
 
-- A **Port** defines *what the application needs* — in this case:  
-  _“Give me a list of products similar to this embedding.”_  
-  It’s a clean interface, with no technical details.
+- Producers own how data is written
+- Consumers read from stable, versioned contracts
 
-- An **Adapter** is *how we fulfill that request* — for now, it runs a MongoDB `$vectorSearch` query.  
-  Later, it might call an external API instead.
+`recommendation-ms` consuming the `catalog` collection is **Data-as-a-Service**, not DB sharing.
 
-> Using ports allows us to swap implementations without touching the core logic.
+## Why Vector Search Lives in Recommendation-MS
 
----
+The Recommendation domain owns:
 
-##  To revisit when `product-ms` becomes part of the system
+- Interpreting user actions
+- Using embeddings for semantic similarity
+- Applying ranking rules and business context
+- Generating omnichannel suggestions
+
+To do this, it needs:
+
+1. **Direct access** to the shared Product Data Domain  
+2. **Local control** of `$vectorSearch` execution  
+3. A **stable contract** for product data, not API orchestration
+
+Even if `product-ms` is introduced later, it would become **another producer or API**, not the owner of recommendation logic.
+
+The **value** lives here:
+
+> Deciding *what* to recommend and *why*, not just retrieving similar products.
+
+## Ports & Adapters
+
+To avoid coupling recommendation logic with data retrieval details, `recommendation-ms` uses a **Port**:
+
+**Port:**  
+```text
+Given a product (or embedding), return similar catalog items.
+```
+
+**Current Adapter:**  
+Executes MongoDB `$vectorSearch` on the ODL `catalog` collection.
+
+**Future Adapter Options:**  
+- `product-ms` HTTP endpoint  
+- Dedicated retrieval service  
+- Alternative embedding store
+
+The domain logic remains unchanged.
+
+## Decision
+
+We **keep vector search in `recommendation-ms`**, running against the Product Data Domain in the ODL.
+
+This is acceptable because:
+
+- Reads are **read-only** and governed by contract schemas  
+- The ODL is intentionally shared and versioned  
+- MongoDB supports real-time, search-ready operational workloads  
+- The Recommendation domain must own similarity and ranking logic
+
+No refactor is required.
+
+
+
+## Summary
+
+❌ Anti-pattern  
+Querying another service’s private operational database
+
+✅ Valid pattern  
+Consuming a **shared Product Data Domain** within an **Operational Data Layer**, designed for real-time search, personalization, and AI
+
+`recommendation-ms` operates according to the latter.
