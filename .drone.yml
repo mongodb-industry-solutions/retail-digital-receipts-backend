@@ -66,8 +66,9 @@ steps:
       values:
         - "image.repository=795250896452.dkr.ecr.us-east-1.amazonaws.com/industrysolutions/retail-digital-receipts-invoice-ms"
         - "image.tag=git-${DRONE_COMMIT_SHA:0:7}"
-        - "ingress.enabled=false"
         - "mesh.enabled=true"
+        - "ingress.enabled=true"
+        - "ingress.hosts[0]=retail-digital-receipts-invoice-ms.industrysolutions.staging.corp.mongodb.com"
 
       api_server: https://api.staging.corp.mongodb.com
       kubernetes_token:
@@ -171,8 +172,9 @@ steps:
       values:
         - "image.repository=795250896452.dkr.ecr.us-east-1.amazonaws.com/industrysolutions/retail-digital-receipts-invoice-ms"
         - "image.tag=git-${DRONE_COMMIT_SHA:0:7}"
-        - "ingress.enabled=false"
         - "mesh.enabled=true"
+        - "ingress.enabled=true"
+        - "ingress.hosts[0]=retail-digital-receipts-invoice-ms.industrysolutions.prod.corp.mongodb.com"
 
       api_server: https://api.prod.corp.mongodb.com
       kubernetes_token:
