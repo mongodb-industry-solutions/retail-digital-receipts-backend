@@ -1,0 +1,208 @@
+kind: pipeline
+type: kubernetes
+name: staging
+
+platform:
+  arch: amd64
+
+trigger:
+  branch:
+    - staging
+
+steps:
+  # Build invoice-ms (staging)
+  - name: publish-invoice-ms
+    image: plugins/kaniko-ecr
+    settings:
+      create_repository: true
+      registry: 795250896452.dkr.ecr.us-east-1.amazonaws.com
+      repo: industrysolutions/retail-digital-receipts-invoice-ms
+      tags:
+        - git-${DRONE_COMMIT_SHA:0:7}
+        - latest
+      dockerfile: services/invoice-ms/Dockerfile
+      context: services/invoice-ms
+      access_key:
+        from_secret: ecr_access_key
+      secret_key:
+        from_secret: ecr_secret_key
+    when:
+      event:
+        - push
+
+  # Build recommendation-ms (staging)
+  - name: publish-recommendation-ms
+    image: plugins/kaniko-ecr
+    settings:
+      create_repository: true
+      registry: 795250896452.dkr.ecr.us-east-1.amazonaws.com
+      repo: industrysolutions/retail-digital-receipts-recommendation-ms
+      tags:
+        - git-${DRONE_COMMIT_SHA:0:7}
+        - latest
+      dockerfile: services/recommendation-ms/Dockerfile
+      context: services/recommendation-ms
+      access_key:
+        from_secret: ecr_access_key
+      secret_key:
+        from_secret: ecr_secret_key
+    when:
+      event:
+        - push
+
+  # Deploy invoice-ms to staging
+  - name: deploy-invoice-ms-staging
+    image: public.ecr.aws/kanopy/drone-helm:v3
+    settings:
+      chart: mongodb/web-app
+      chart_version: 4.25.0
+      add_repos: [mongodb=https://10gen.github.io/helm-charts]
+      namespace: industrysolutions
+      release: retail-digital-receipts-invoice-ms-staging
+
+      values_files:
+        - "environment/staging-invoice-ms.yaml"
+
+      values:
+        - "image.repository=795250896452.dkr.ecr.us-east-1.amazonaws.com/industrysolutions/retail-digital-receipts-invoice-ms"
+        - "image.tag=git-${DRONE_COMMIT_SHA:0:7}"
+        - "ingress.enabled=false"
+        - "mesh.enabled=true"
+
+      api_server: https://api.staging.corp.mongodb.com
+      kubernetes_token:
+        from_secret: staging_kubernetes_token
+    when:
+      event:
+        - push
+
+  # Deploy recommendation-ms to staging
+  - name: deploy-recommendation-ms-staging
+    image: public.ecr.aws/kanopy/drone-helm:v3
+    settings:
+      chart: mongodb/web-app
+      chart_version: 4.25.0
+      add_repos: [mongodb=https://10gen.github.io/helm-charts]
+      namespace: industrysolutions
+      release: retail-digital-receipts-recommendation-ms-staging
+
+      values_files:
+        - "environment/staging-recommendation-ms.yaml"
+
+      values:
+        - "image.repository=795250896452.dkr.ecr.us-east-1.amazonaws.com/industrysolutions/retail-digital-receipts-recommendation-ms"
+        - "image.tag=git-${DRONE_COMMIT_SHA:0:7}"
+        - "ingress.enabled=false"
+        - "mesh.enabled=true"
+
+      api_server: https://api.staging.corp.mongodb.com
+      kubernetes_token:
+        from_secret: staging_kubernetes_token
+    when:
+      event:
+        - push
+
+---
+kind: pipeline
+type: kubernetes
+name: production
+
+platform:
+  arch: amd64
+
+trigger:
+  branch:
+    - main
+
+steps:
+  # Build invoice-ms (prod)
+  - name: publish-invoice-ms
+    image: plugins/kaniko-ecr
+    settings:
+      create_repository: true
+      registry: 795250896452.dkr.ecr.us-east-1.amazonaws.com
+      repo: industrysolutions/retail-digital-receipts-invoice-ms
+      tags:
+        - git-${DRONE_COMMIT_SHA:0:7}
+        - latest
+      dockerfile: services/invoice-ms/Dockerfile
+      context: services/invoice-ms
+      access_key:
+        from_secret: ecr_access_key
+      secret_key:
+        from_secret: ecr_secret_key
+    when:
+      event:
+        - push
+
+  # Build recommendation-ms (prod)
+  - name: publish-recommendation-ms
+    image: plugins/kaniko-ecr
+    settings:
+      create_repository: true
+      registry: 795250896452.dkr.ecr.us-east-1.amazonaws.com
+      repo: industrysolutions/retail-digital-receipts-recommendation-ms
+      tags:
+        - git-${DRONE_COMMIT_SHA:0:7}
+        - latest
+      dockerfile: services/recommendation-ms/Dockerfile
+      context: services/recommendation-ms
+      access_key:
+        from_secret: ecr_access_key
+      secret_key:
+        from_secret: ecr_secret_key
+    when:
+      event:
+        - push
+
+  # Deploy invoice-ms to prod
+  - name: deploy-invoice-ms-prod
+    image: public.ecr.aws/kanopy/drone-helm:v3
+    settings:
+      chart: mongodb/web-app
+      chart_version: 4.25.0
+      add_repos: [mongodb=https://10gen.github.io/helm-charts]
+      namespace: industrysolutions
+      release: retail-digital-receipts-invoice-ms-prod
+
+      values_files:
+        - "environment/production-invoice-ms.yaml"
+
+      values:
+        - "image.repository=795250896452.dkr.ecr.us-east-1.amazonaws.com/industrysolutions/retail-digital-receipts-invoice-ms"
+        - "image.tag=git-${DRONE_COMMIT_SHA:0:7}"
+        - "ingress.enabled=false"
+        - "mesh.enabled=true"
+
+      api_server: https://api.prod.corp.mongodb.com
+      kubernetes_token:
+        from_secret: prod_kubernetes_token
+    when:
+      event:
+        - push
+
+  # Deploy recommendation-ms to prod
+  - name: deploy-recommendation-ms-prod
+    image: public.ecr.aws/kanopy/drone-helm:v3
+    settings:
+      chart: mongodb/web-app
+      chart_version: 4.25.0
+      add_repos: [mongodb=https://10gen.github.io/helm-charts]
+      namespace: industrysolutions
+      release: retail-digital-receipts-recommendation-ms-prod
+
+      values_files:
+        - "environment/production-recommendation-ms.yaml"
+
+      values:
+        - "image.repository=795250896452.dkr.ecr.us-east-1.amazonaws.com/industrysolutions/retail-digital-receipts-recommendation-ms"
+        - "image.tag=git-${DRONE_COMMIT_SHA:0:7}"
+        - "ingress.enabled=false"
+        - "mesh.enabled=true"
+
+      api_server: https://api.prod.corp.mongodb.com
+      kubernetes_token:
+        from_secret: prod_kubernetes_token
+    when:
+      event:
+        - push

@@ -28,7 +28,8 @@ RUN apt-get remove --purge -y build-essential libpq-dev && \
 
 COPY . .
 
-EXPOSE 80
+# Puerto estándar para Kanopy
+ENV PORT=8080
+EXPOSE 8080
 
-CMD ["poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
-#CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80", "--log-config", "log_config.yaml", "--reload"]
+CMD ["poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]

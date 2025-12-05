@@ -1,0 +1,13 @@
+env:
+  NODE_ENV: "staging"
+  PORT: "8080"
+
+envSecrets:
+  MONGODB_URI: invoice-ms-secrets
+  DATABASE_NAME: invoice-ms-secrets
+  AZURE_BLOB_CONTAINER_NAME: invoice-ms-secrets
+  AZURE_BLOB_ACCOUNT_URL: invoice-ms-secrets
+  ORIGINS: invoice-ms-secrets
+  AZURE_METADATA_ENDPOINT: invoice-ms-secrets
+  STORE_URL: invoice-ms-secrets
+

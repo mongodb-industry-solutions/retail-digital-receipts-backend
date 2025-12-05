@@ -24,5 +24,8 @@ COPY . .
 # Set Python path so 'app.' modules are correctly resolved
 ENV PYTHONPATH=/app
 
-CMD ["poetry", "run", "python", "main.py"]
+# Puerto estándar para Kanopy
+ENV PORT=8080
+EXPOSE 8080
 
+CMD ["poetry", "run", "python", "main.py"]

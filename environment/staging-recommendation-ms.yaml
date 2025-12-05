@@ -1,0 +1,9 @@
+env:
+  NODE_ENV: "staging"
+  PORT: "8080"
+
+envSecrets:
+  MONGODB_URI: recommendation-ms-secrets
+  DATABASE_NAME: recommendation-ms-secrets
+  VECTOR_INDEX_NAME: recommendation-ms-secrets
+  EMBEDDING_FIELD: recommendation-ms-secrets

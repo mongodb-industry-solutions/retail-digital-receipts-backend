@@ -1,0 +1,9 @@
+env:
+  NODE_ENV: "production"
+  PORT: "8080"
+
+envSecrets:
+  MONGODB_URI: recommendation-ms-prod-secrets
+  DATABASE_NAME: recommendation-ms-prod-secrets
+  VECTOR_INDEX_NAME: recommendation-ms-prod-secrets
+  EMBEDDING_FIELD: recommendation-ms-prod-secrets

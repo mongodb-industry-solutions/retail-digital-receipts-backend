@@ -1,0 +1,12 @@
+env:
+  NODE_ENV: "production"
+  PORT: "8080"
+
+envSecrets:
+  MONGODB_URI: invoice-ms-prod-secrets
+  DATABASE_NAME: invoice-ms-prod-secrets
+  AZURE_BLOB_CONTAINER_NAME: invoice-ms-prod-secrets
+  AZURE_BLOB_ACCOUNT_URL: invoice-ms-prod-secrets
+  ORIGINS: invoice-ms-prod-secrets
+  AZURE_METADATA_ENDPOINT: invoice-ms-prod-secrets
+  STORE_URL: invoice-ms-prod-secrets
