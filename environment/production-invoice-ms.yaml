@@ -10,3 +10,11 @@ envSecrets:
   ORIGINS: invoice-ms-prod-secrets
   AZURE_METADATA_ENDPOINT: invoice-ms-prod-secrets
   STORE_URL: invoice-ms-prod-secrets
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "256Mi"
+  limits:
+    cpu: "500m"
+    memory: "1024Mi"
