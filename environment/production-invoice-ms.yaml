@@ -18,3 +18,11 @@ resources:
   limits:
     cpu: "500m"
     memory: "1024Mi"
+
+# Kanopy security and ownership (requires web-app chart v4.30.0+)
+security:
+  dataClassification: "Internal"
+  dataDesignation: ["MI"]
+
+ownership:
+  driEmail: flor.arin@mongodb.com
