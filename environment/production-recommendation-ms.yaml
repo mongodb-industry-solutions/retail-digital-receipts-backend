@@ -7,3 +7,11 @@ envSecrets:
   DATABASE_NAME: recommendation-ms-prod-secrets
   VECTOR_INDEX_NAME: recommendation-ms-prod-secrets
   EMBEDDING_FIELD: recommendation-ms-prod-secrets
+
+# Kanopy security and ownership (requires web-app chart v4.30.0+)
+security:
+  dataClassification: "Internal"
+  dataDesignation: ["MI"]
+
+ownership:
+  driEmail: flor.arin@mongodb.com
