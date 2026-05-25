@@ -18,7 +18,7 @@ pydantic = ">=2.7,<3.0"
 pydantic-settings = "^2.8.1"
 httpx = "^0.28.1"
 azure-identity = "^1.21.0"
-weasyprint = "^65.1"
+weasyprint = ">=65.1,<69.0"
 
 [build-system]
 requires = ["poetry-core"]
