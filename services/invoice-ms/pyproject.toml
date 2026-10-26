@@ -19,6 +19,7 @@ pydantic-settings = "^2.8.1"
 httpx = "^0.28.1"
 azure-identity = "^1.21.0"
 weasyprint = "^65.1"
+brotlicffi = ">=1.2.1.0"
 
 [build-system]
 requires = ["poetry-core"]
