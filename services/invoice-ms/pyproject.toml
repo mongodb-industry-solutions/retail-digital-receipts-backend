@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{ include = "app" }]  # Add this line to specify where the source code is
 
 [tool.poetry.dependencies]
-python = ">=3.10,<3.11"
+python = ">=3.12,<3.13"
 pymongo = "^4.10.1"
 python-dotenv = "^1.0.1"
 fastapi = "^0.115.4"
@@ -20,6 +20,7 @@ httpx = "^0.28.1"
 azure-identity = "^1.21.0"
 weasyprint = "^65.1"
 brotlicffi = ">=1.2.1.0"
+pillow = ">=13.0.0"
 
 [build-system]
 requires = ["poetry-core"]
